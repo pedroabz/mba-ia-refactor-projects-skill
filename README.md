@@ -42,7 +42,7 @@
 
 ***Severidade Critical***
 - NotificationService com usuário e senha hardcoded, exposto em arquivo versionado e commitado no repositório.
--ECRET_KEY hardcoded em app.py:13 ('super-secret-key-123').
+-SECRET_KEY hardcoded em app.py:13 ('super-secret-key-123').
 
 ***Severidade MEDIUM***
 - validate_email em helpers.py deixa passar emaiils inválido (só valida ter dois blocos de texto separados por @)
@@ -53,6 +53,12 @@
 - no arquivo task.py a lib json é importada e nunca usada
 - No arquivo helpers.py há diversos exemplos de libs importadas e não usadas
 ## Construção da Skill
+Fase 1: Escrita manual da skill baseada nas instruções do projeto.
+Contendo assim o que cada etapa do fluxo deveria fazer e o que era esperado.
+Foram usadas técnicas de prompts engeneering como few shot e chain of thought para organizer o trabalho.
+Fase 2: Formulação de um plano para chegar a versão final da skill.
+- Como adicionar os arquivos de referência e quais estratégias usar para que não fiquem grandes demais e sejam ignoradas pelos agented de IA? -> Nesse caso a estratégia foi dividir certos pontos que precisam de mais detalhamento em arquivos de referência + deep analysis (feito para anti patterns e refactoring playbook). O agente identifica o problema e então toma a ação carregando só o necessário. -> Nenhum arquivo de referência deveria ter mais de 200 linhas.
+- Refatorar a skill para um linguagem mais clara, sem ambiguidade e já referenciando os reference files. Foi usado a IA para pontuar quais são as falhas da skill frente as instruções para que as mudanças pudessem ser feitas com clareza e intencionalidade.
 
 ## Resultados
 

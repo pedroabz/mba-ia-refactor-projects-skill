@@ -42,6 +42,14 @@ Project: <directory name>
 Stack:   <language + framework + persistence>
 Files:   <N> analyzed | ~<M> lines of code
 
+## Project Profile
+Language:      <language + version if pinned>
+Framework:     <framework + version from the manifest>
+Dependencies:  <direct dependencies, comma separated>
+Domain:        <what the application does, in the codebase's own vocabulary>
+Architecture:  <one sentence: state before refactoring, measured not guessed>
+DB tables:     <table names, or "none">
+
 ## Summary
 CRITICAL: <n> | HIGH: <n> | MEDIUM: <n> | LOW: <n>
 
@@ -67,6 +75,11 @@ Total: <n> findings
 
 ### Rules the format depends on
 
+- **Carry the profile, don't re-derive it.** `## Project Profile` repeats what the analysis
+  already established, so the report stands on its own: a reader who only has this file can
+  judge whether the findings make sense for that stack without going back to the console
+  output. The three-line header above it stays because it is what the challenge's own example
+  shows; the profile block is the detail behind it.
 - **Order by severity**, CRITICAL first. Within a severity, order by file path so repeated
   reads of the same report are stable.
 - **Exact locations.** `path:42` for a single line, `path:42-68` for a range. A finding whose

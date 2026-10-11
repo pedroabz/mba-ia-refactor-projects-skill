@@ -373,19 +373,20 @@ Worth recording so they are not re-litigated:
 
 ## Approval
 
-Per-item decision, in the order I would apply them:
+All eleven applied in step 4, with Pedro's two open decisions resolved as recorded above
+(G6 → Option B, G11 → extend the template).
 
-- [ ] G1 — report path (blocking)
-- [ ] G2 — reference file paths (blocking)
-- [ ] G3 — description, or just the scope sentence
-- [ ] G4 — validation procedure
-- [ ] G5 — remove the unconditional claim
-- [ ] G7 — adapt to starting point
-- [ ] G8 — prohibition during the gate
-- [ ] G9 — truncated line
-- [ ] G10 — repetition
-- [ ] G6 — Option A (full extraction) / Option B (keep short examples) / reject
-- [ ] G11 — reword / extend template / reject
+- [x] G1 — report path (blocking)
+- [x] G2 — reference file paths (blocking)
+- [x] G3 — description, full version
+- [x] G4 — validation procedure
+- [x] G5 — removed the unconditional claim, replaced with the completion format
+- [x] G7 — adapt to starting point
+- [x] G8 — prohibition during the gate
+- [x] G9 — truncated line deleted
+- [x] G10 — repetition cut
+- [x] G6 — Option B: healthcare report and severity scale removed, output banners kept
+- [x] G11 — `report-template.md` extended with a `## Project Profile` block
 
-G1 and G2 are the two that must land for the skill to work when copied. Everything else is
-improvement, and rejecting any of it leaves a working skill.
+`SKILL.md` went from 152 to 141 lines: roughly 55 lines of duplicated knowledge removed,
+roughly 44 lines of procedure and reference pointers added.

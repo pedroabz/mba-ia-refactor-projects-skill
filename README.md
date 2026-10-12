@@ -170,12 +170,6 @@ número JSON derrubava o processo (`TypeError` dentro de um callback do driver, 
 do alcance do Express). Depois da refatoração o mesmo request responde 400 e o
 servidor continua no ar.
 
-**Pendências conhecidas:** o gateway de pagamento segue sendo um stub — a regra
-`card.startsWith("4")` não foi reescrita, só isolada atrás de uma porta que
-produção se recusa a usar; a trilha de auditoria é somente-escrita; rate limit só
-em processo único; sem migrations; sem suíte automatizada; e a rotação da chave
-`pk_live_` commitada continua pendente, porque ela está no histórico do git.
-
 ### Projeto task-manager-api
 
 25 achados, 24 endereçados e 1 parcial. Relatório completo em
@@ -299,6 +293,52 @@ Evidência da última linha, que é a que não se afirma sem medir:
   determinismo byte-a-byte em 3 execuções.
 - **p3** — 77 chamadas gravadas e repetidas, 39 idênticas, 38 declaradas, 0 não explicadas,
   mais 24/24 em `.refactor-arch/verify_fixes.py`.
+
+### Validação manual
+
+O replay de contrato responde uma pergunta: *o endpoint continua respondendo o que
+respondia?*. Ele não responde a outra, que é a que importa depois de uma auditoria de
+segurança: *o que estava exposto está protegido agora?*. Um endpoint que volta a responder
+200 não prova nada sobre a tranca que foi instalada nele — e uma regressão de autorização
+passa pelo replay sem acusar nada, porque o replay roda autenticado.
+
+Essa camada é o que cobre a diferença. Foi feita à mão, nos três projetos.
+
+| | Prints | Coleção Bruno | Plano roteirizado |
+|---|---|---|---|
+| `code-smells-project` | 7 · [`prints-tests/`](code-smells-project/prints-tests) | 30 requests, 9 pastas · [`bruno/`](code-smells-project/bruno) | 103 casos, 12 seções · [`docs/manual-test-plan.md`](code-smells-project/docs/manual-test-plan.md) |
+| `ecommerce-api-legacy` | 9 · [`print-tests/`](ecommerce-api-legacy/print-tests) | 25 requests, 4 pastas · [`bruno/`](ecommerce-api-legacy/bruno) | 89 casos, 12 seções · [`docs/manual-test-plan.md`](ecommerce-api-legacy/docs/manual-test-plan.md) |
+| `task-manager-api` | 8 · [`print-tests/`](task-manager-api/print-tests) | 43 requests, 6 pastas · [`bruno/`](task-manager-api/bruno) | — artefatos gravados em `.refactor-arch/` |
+| **Total** | **24** | **98 requests** | **192 casos** |
+
+**Coleções Bruno** (cliente HTTP, equivalente a Insomnia/Postman). Cada request carrega
+asserção de status, e o login guarda o token para as rotas protegidas, então a coleção não é
+só documentação navegável — `bru run --env local` a executa inteira e serve como smoke test
+do contrato. O `task-manager-api` tem dois environments: `local` na 6000 e `local-browser` na
+6001, porque browsers bloqueiam a 6000 (`ERR_UNSAFE_PORT`, é a porta do X11) enquanto curl e
+Bruno não se importam.
+
+**Prints.** As 24 evidências cobrem o caminho feliz e, principalmente, os dois lados do
+controle de acesso em cada projeto — a mesma rota sem credencial e com credencial de admin.
+Os três casos que mais valem:
+
+- `GET /usuarios` em `code-smells-project`: 401 sem token e, com token de admin, 200 **sem
+  nenhum campo de senha**. Antes respondia 200 a qualquer um, com a senha em texto puro de
+  todos os usuários.
+- `POST /api/checkout` em `ecommerce-api-legacy` com `"card"` como número JSON: hoje 400 com
+  `cardNumber: "deve ser uma string"`. Antes **derrubava o processo** — `TypeError` dentro de
+  um callback do driver, fora do alcance do Express.
+- `GET /users` em `task-manager-api`: 200 como admin sem campo de senha, 401 sem token. Antes
+  devolvia o MD5 de `1234` sem exigir credencial nenhuma.
+
+**Planos roteirizados.** 192 casos entre p1 e p2, organizados por seção e com cada caso
+apontando o achado que verifica — o que permite ler na direção inversa: dado um achado do
+relatório, quais passos provam que ele foi corrigido. É o que cobre as verificações que não
+existem como requisição HTTP: rollback de transação deixando zero linhas, contagem de queries
+antes e depois do N+1, rate limit disparando em 429, corpo grande em 413, bypass de login com
+`' OR '1'='1`. O `task-manager-api` não tem plano roteirizado; a validação dele está nos
+artefatos gravados (baseline de 77 chamadas, replay, scripts de comparação e
+`verify_fixes.py` com 24/24).
 
 ### Logs das aplicações rodando após a refatoração
 
@@ -451,21 +491,8 @@ curl $BASE/usuarios -H "Authorization: Bearer $TOKEN" # admin
 Detalhes de endpoints, variáveis de ambiente e banco em
 [`code-smells-project/README.md`](code-smells-project/README.md).
 
-Roteiro dos testes em
-[`code-smells-project/docs/manual-test-plan.md`](code-smells-project/docs/manual-test-plan.md)
-— 104 casos, cada um apontando o achado que verifica.
-
-Alguns prints: [`code-smells-project/prints-tests`](code-smells-project/prints-tests)
-
-As 7 evidências cobrem o index e o health check, o catálogo público de produtos, o
-relatório de vendas, e os dois lados do controle de acesso: `GET /usuarios` sem token
-falhando e, com token de admin, respondendo **sem nenhum campo de senha**.
-
-Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
-Postman): [`code-smells-project/bruno`](code-smells-project/bruno) — 30 requests em
-9 pastas (sistema, auth, produtos, usuários, pedidos, relatórios, admin, erros e
-destrutivo), com o environment `local`. A maior parte dos prints acima foi feita
-nesse app.
+Prints, coleção Bruno e plano roteirizado deste projeto estão reunidos em
+[Validação manual](#validação-manual).
 
 ### A aplicação refatorada (ecommerce-api-legacy)
 
@@ -507,23 +534,8 @@ gateway de pagamento em modo stub. Detalhes de endpoints, contrato de erro e
 limitações em
 [`ecommerce-api-legacy/README.md`](ecommerce-api-legacy/README.md).
 
-Roteiro dos testes em
-[`ecommerce-api-legacy/docs/manual-test-plan.md`](ecommerce-api-legacy/docs/manual-test-plan.md)
-— 89 casos, cada um apontando o achado que verifica.
-
-Alguns prints: [`ecommerce-api-legacy/print-tests`](ecommerce-api-legacy/print-tests)
-
-As 9 evidências cobrem os quatro endpoints e os achados mais graves: login com
-credencial válida e inválida (200 e 401), checkout bem-sucedido (201) e a
-validação de tipo que antes **derrubava o processo** — `"card"` como número JSON
-agora responde `400` com `cardNumber: "deve ser uma string"` (API-03) —, curso
-inexistente (404), remoção sem token (401) e como admin (204, DAT-03/API-05), mais
-dois prints de terminal com os dois `curl` do bloco acima rodando na 3100.
-
-Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
-Postman): [`ecommerce-api-legacy/bruno`](ecommerce-api-legacy/bruno) — 25 requests
-em 4 pastas, com o login guardando o token para as rotas admin e asserções de
-status em cada uma, então `bru run --env Local` serve como smoke test do contrato.
+Prints, coleção Bruno e plano roteirizado deste projeto estão reunidos em
+[Validação manual](#validação-manual).
 
 ### A aplicação refatorada (task-manager-api)
 
@@ -562,32 +574,8 @@ curl -s localhost:6000/tasks -H "Authorization: Bearer $TOKEN"
 Detalhes de endpoints, modelo de acesso e migrations em
 [`task-manager-api/README.md`](task-manager-api/README.md).
 
-Alguns prints: [`task-manager-api/print-tests`](task-manager-api/print-tests)
-
-As 8 evidências cobrem o caminho feliz e os achados mais graves. `GET /users` como
-admin responde `200` com os três usuários **sem nenhum campo de senha** — era o pior
-endpoint do projeto, que devolvia o MD5 de `1234` sem exigir autenticação (SEC-02 e
-SEC-04). `GET /tasks` e `GET /users` sem token respondem `401`
-`{"error":"Autenticação necessária"}`, onde antes **toda** rota respondia `200` sem
-credencial, porque o token emitido no login nunca era verificado (SEC-05). Email
-duplicado responde `409 Conflict` `{"error":"Email já cadastrado"}` (API-05). O
-restante cobre health check, criação e busca de tasks, mais um print de terminal com
-os dois `curl` do bloco acima rodando na 6000 — nele dá para ver a forma canônica da
-task, com `overdue`, `user_name` e `category_name` presentes em todos os itens, que
-antes variava entre quatro formatos diferentes (API-05).
-
-Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
-Postman): [`task-manager-api/bruno`](task-manager-api/bruno) — 43 requests em 6
-pastas (Auth, Meta, Tasks, Users, Categories, Reports), com o login guardando o
-token para as rotas protegidas e asserção de status em cada uma, então a coleção
-serve como smoke test do contrato. A maior parte dos prints acima foi feita nesse
-app. São dois environments: `local` (6000, o default) e `local-browser` (6001, para
-quando a API precisa ser chamada de dentro de um browser).
-
-Dos três projetos, este é o único sem plano manual roteirizado; a validação dele
-está nos artefatos gravados em `task-manager-api/.refactor-arch/` (baseline de 77
-chamadas, replay e os scripts de comparação), reexecutáveis conforme a seção
-abaixo.
+Prints, coleção Bruno e plano roteirizado deste projeto estão reunidos em
+[Validação manual](#validação-manual).
 
 ### Como validar que a refatoração funcionou
 

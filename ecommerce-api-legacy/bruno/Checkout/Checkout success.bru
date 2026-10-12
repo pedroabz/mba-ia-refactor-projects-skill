@@ -20,7 +20,7 @@ body:json {
     "email": "gui@fullcycle.com.br",
     "password": "senhaforte",
     "courseId": 2,
-    "cardNumber": "{{approvedCard}}"
+    "cardNumber": "4111222233334444"
   }
 }
 
@@ -32,7 +32,7 @@ tests {
     expect(res.body.amount).to.equal(497);
     expect(res.body.status).to.equal("PAID");
   });
-
+  
   test("Location aponta para a matrícula criada", function() {
     expect(res.headers.location).to.equal("/api/enrollments/" + res.body.enrollmentId);
   });
@@ -43,9 +43,9 @@ docs {
   de auditoria **em uma única transação**. Antes eram quatro escritas sem fronteira
   transacional, e uma falha no meio deixava estado parcial comitado — matrícula sem
   pagamento, isto é, acesso ao curso sem cobrança registrada (DAT-01).
-
+  
   Resposta era `200 {"msg":"Sucesso","enrollment_id":n}`; agora é `201` com
   `Location` e os campos nomeados (API-05).
-
+  
   Nomes canônicos: `name`, `email`, `password`, `courseId`, `cardNumber`.
 }

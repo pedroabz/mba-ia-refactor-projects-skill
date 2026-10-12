@@ -6,11 +6,14 @@ evidence that it is now guarded.
 
 Usage: python .refactor-arch/verify_fixes.py
 """
+import os
 import sys
 
 import requests
 
-BASE = "http://127.0.0.1:5000"
+# Default matches the application's own default port (6000). Override with
+# BASE_URL when the app runs elsewhere.
+BASE = os.environ.get("BASE_URL", "http://127.0.0.1:6000").rstrip("/")
 results = []
 
 

@@ -62,7 +62,13 @@ class Settings:
     # console to every interface (SEC-06).
     DEBUG: bool = _flag("DEBUG")
     HOST: str = os.getenv("HOST", "127.0.0.1")
-    PORT: int = int(os.getenv("PORT", "5000"))
+    # 6000 em vez de 5000: no macOS o AirPlay Receiver ocupa a 5000, e os
+    # outros projetos deste repositório também a usam.
+    # Atenção: browsers bloqueiam a porta 6000 (é a do X11) — Chrome e Firefox
+    # recusam com ERR_UNSAFE_PORT. Chamadas por curl, Bruno ou qualquer cliente
+    # HTTP funcionam normalmente; um front-end em browser precisa de outra porta
+    # (`PORT=6001`, por exemplo).
+    PORT: int = int(os.getenv("PORT", "6000"))
 
     # --- HTTP boundary ----------------------------------------------------
     CORS_ORIGINS: list[str] = _csv("CORS_ORIGINS", "http://localhost:3000")

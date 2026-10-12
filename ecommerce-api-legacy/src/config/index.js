@@ -57,7 +57,10 @@ const config = Object.freeze({
     isProduction,
 
     http: Object.freeze({
-        port: int('PORT', 3000),
+        // 3100 e não 3000: a porta 3000 é disputada por quase todo servidor de
+        // desenvolvimento e por containers que a publicam, e o conflito custa mais
+        // que a convenção. `PORT` sobrescreve.
+        port: int('PORT', 3100),
         host: str('HOST', '127.0.0.1'),
         bodyLimit: str('HTTP_BODY_LIMIT', '100kb'),
     }),

@@ -20,9 +20,22 @@ python seed.py      # aplica as migrations e popula o banco
 python wsgi.py      # sobe a aplicação
 ```
 
-A aplicação sobe em `http://127.0.0.1:5000` (loopback, não `0.0.0.0`). O `seed.py`
+A aplicação sobe em `http://127.0.0.1:6000` (loopback, não `0.0.0.0`). O `seed.py`
 roda `flask db upgrade` e popula o SQLite (`tasks.db`) com usuários, categorias e
 tasks de exemplo — **rode-o antes do primeiro boot**.
+
+> **Por que 6000 e não 5000.** No macOS o *AirPlay Receiver* ocupa a porta 5000,
+> e os outros projetos deste repositório também a usam — o boot falhava com
+> `Address already in use`.
+>
+> Em contrapartida, **browsers bloqueiam a porta 6000** (é a do X11): Chrome e
+> Firefox recusam com `ERR_UNSAFE_PORT`. `curl`, Bruno, Postman e qualquer
+> cliente HTTP funcionam sem problema. Se precisar de chamar a API diretamente
+> de uma página no browser, suba noutra porta:
+>
+> ```bash
+> PORT=6001 python wsgi.py
+> ```
 
 Em produção, um servidor WSGI importa a aplicação diretamente e `app.run` nunca é
 chamado:
@@ -56,11 +69,11 @@ flask db migrate -m "descrição"       # gera uma migration a partir dos models
 `POST /login` devolve um token assinado (com expiração). Envie-o nas demais chamadas:
 
 ```bash
-TOKEN=$(curl -s -X POST localhost:5000/login \
+TOKEN=$(curl -s -X POST localhost:6000/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"joao@email.com","password":"1234"}' | python -c 'import sys,json;print(json.load(sys.stdin)["token"])')
 
-curl -s localhost:5000/tasks -H "Authorization: Bearer $TOKEN"
+curl -s localhost:6000/tasks -H "Authorization: Bearer $TOKEN"
 ```
 
 Modelo de acesso (deny by default):

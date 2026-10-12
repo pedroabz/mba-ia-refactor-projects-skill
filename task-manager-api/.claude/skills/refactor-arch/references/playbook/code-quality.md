@@ -171,11 +171,16 @@ def buscar_produto(produto_id): ...
 
 1. Name by intent, not mechanism. `cursor_itens` beats `cursor2`.
 2. Avoid shadowing builtins; prefer the qualified domain name (`produto_id` over `id`).
-3. Expand abbreviations in the public API contract — a caller should not have to guess that
-   `eml` is an email. This changes the request contract, so declare it in the report.
-4. Sequentially numbered names usually mean the block should be extracted. Prefer the
+3. **Internal names only, by default.** Local variables, parameters and private helpers are
+   free to rename. Request and response field names are the public contract: renaming `eml`
+   to `email` breaks every existing client and every saved request example shipped with the
+   project, and the baseline replay will report it as a regression — correctly. Leave them
+   alone unless the operator explicitly asks for a contract change, and then declare it.
+4. Keep the project's language. A rename makes an existing name clearer in the words the
+   project already uses; it does not translate it.
+5. Sequentially numbered names usually mean the block should be extracted. Prefer the
    extraction (T-07, T-12) over a better name for the same tangle.
-5. Keep renames mechanical and separate from logic changes, so the baseline diff stays readable.
+6. Keep renames mechanical and separate from logic changes, so the baseline diff stays readable.
 
 ---
 

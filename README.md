@@ -241,7 +241,85 @@ público por um ganho de legibilidade LOW. E uma recomendação foi deliberadame
 credenciais que a API hoje aceita — decisão de operação, não de refatoração.
 Sem suíte automatizada.
 
+### Checklist de validação
+
+O checklist do enunciado, preenchido por projeto. A coluna de evidência diz de onde
+vem a marcação — replay do contrato, relatório, ou verificação ao vivo.
+
+| Fase 1 — Análise | p1 | p2 | p3 |
+|---|---|---|---|
+| Linguagem detectada corretamente | ✅ | ✅ | ✅ |
+| Framework detectado corretamente | ✅ | ✅ | ✅ |
+| Domínio da aplicação descrito corretamente | ✅ | ✅ | ✅ |
+| Número de arquivos analisados condiz com a realidade | ✅ | ✅ | ✅ |
+
+p1 `Python 3.14 + Flask 3.1.1`, 4 arquivos, 4 tabelas · p2 `Node + Express 4`, 3 arquivos
+de `src/`, 5 tabelas · p3 `Python + Flask 3.0 + Flask-SQLAlchemy`, 17 arquivos. As
+contagens foram conferidas contra `find`/`wc`, não estimadas.
+
+| Fase 2 — Auditoria | p1 | p2 | p3 |
+|---|---|---|---|
+| Relatório segue o template dos arquivos de referência | ✅ | ✅ | ✅ |
+| Cada finding tem arquivo e linhas exatos | ✅ | ✅ | ✅ |
+| Findings ordenados por severidade (CRITICAL → LOW) | ✅ | ✅ | ✅ |
+| Mínimo de 5 findings identificados | ✅ 25 | ✅ 24 | ✅ 25 |
+| Detecção de APIs deprecated incluída (se aplicável) | ✅ n/a | ✅ n/a | ✅ 2 |
+| Skill pausa e pede confirmação antes da Fase 3 | ✅ | ✅ | ✅ |
+
+Em p1 e p2 a detecção rodou e o resultado foi "nenhuma, verificado contra `<versão>`" —
+resultado registrado, não omissão. Os 9 achados manuais de p1 e os 12 de p2 aparecem todos
+nos respectivos relatórios (9/9 e 12/12), bem acima do mínimo de 5 exigido.
+
+| Fase 3 — Refatoração | p1 | p2 | p3 |
+|---|---|---|---|
+| Estrutura de diretórios segue padrão MVC | ✅ | ✅ | ✅ |
+| Configuração extraída para módulo de config (sem hardcoded) | ✅ | ✅ | ✅ |
+| Models criados para abstrair dados | ✅ | ✅ | ✅ |
+| Views/Routes separadas | ✅ | ✅ | ✅ |
+| Controllers concentram o fluxo da aplicação | ✅ | ✅ | ✅ |
+| Error handling centralizado | ✅ | ✅ | ✅ |
+| Entry point claro | ✅ | ✅ | ✅ |
+| Aplicação inicia sem erros | ✅ | ✅ | ✅ |
+| Endpoints originais respondem corretamente | ✅ | ✅ | ✅ |
+
+Evidência da última linha, que é a que não se afirma sem medir:
+
+- **p1** — replay independente de 35 passos cobrindo as 19 rotas registradas, rodado por
+  `tools/contract_check.py` contra a aplicação antes e depois. 17 respostas idênticas, 18
+  divergências, **todas** rastreadas a um achado auditado (envelope de paginação, segredo
+  fora do `/health`, `senha` fora dos payloads, `sucesso` no corpo de erro, token no login,
+  `/admin/query` removido). **0 regressões.** A baseline foi provada reprodutível antes de
+  ser usada: duas capturas da aplicação original, 35/35 idênticas.
+- **p1, atrás da autenticação** — o replay anônimo mostra 19 passos em `401`, o que prova a
+  tranca e não o que há atrás dela. Uma segunda execução com token de admin
+  (`tools/specs/code-smells-project.authed.json`) exercita os 22 passos protegidos e é a que
+  sustenta a marcação acima.
+- **p2** — 13 passos do contrato, 12 mudanças declaradas em
+  `tools/declared/ecommerce-api-legacy.json`, 0 divergências não declaradas, mais
+  determinismo byte-a-byte em 3 execuções.
+- **p3** — 77 chamadas gravadas e repetidas, 39 idênticas, 38 declaradas, 0 não explicadas,
+  mais 24/24 em `.refactor-arch/verify_fixes.py`.
+
 ### Logs das aplicações rodando após a refatoração
+
+`code-smells-project` — `Debug mode: off`, loopback e porta 5001, que eram três dos
+achados. O log é estruturado em JSON com nível e timestamp, no lugar dos `print` soltos:
+
+```json
+{"ts":"2026-10-12 18:10:40,899","level":"INFO","logger":"src.infra.schema","msg":"schema verificado"}
+{"ts":"2026-10-12 18:10:41,036","level":"INFO","logger":"src.infra.schema","msg":"carga inicial aplicada"}
+{"ts":"2026-10-12 18:10:41,038","level":"INFO","logger":"src.app","msg":"aplicacao montada"}
+ * Debug mode: off
+ * Running on http://127.0.0.1:5001
+{"ts":"2026-10-12 18:10:45,759","level":"INFO","logger":"src.middlewares.request_log","msg":"requisicao atendida"}
+{"ts":"…","level":"INFO","logger":"werkzeug","msg":"127.0.0.1 - - \"GET /health HTTP/1.1\" 200 -"}
+{"ts":"…","level":"INFO","logger":"werkzeug","msg":"127.0.0.1 - - \"GET /produtos HTTP/1.1\" 200 -"}
+{"ts":"…","level":"INFO","logger":"werkzeug","msg":"127.0.0.1 - - \"GET /usuarios HTTP/1.1\" 401 -"}
+```
+
+As três últimas linhas são o controle de acesso funcionando: catálogo público em 200,
+`/usuarios` sem token em 401 — antes essa rota devolvia 200 com a senha de todos em texto
+puro.
 
 `ecommerce-api-legacy` — três linhas no boot e nada mais até chegar uma
 requisição. Todo `console.log` foi substituído por log estruturado com nível e
@@ -257,14 +335,14 @@ mascarado como `****4444`):
 ```
 
 `task-manager-api` — `Debug mode: off` e loopback, que eram dois dos achados
-(`.refactor-arch/server-final.log`):
+(`.refactor-arch/server-6000.log`):
 
 ```
-2026-10-11 18:23:29,985 INFO  src.app | application composed (debug=False, database=sqlite:///…/tasks.db)
+2026-10-12 17:37:28,527 INFO  src.app | application composed (debug=False, database=sqlite:///…/tasks.db)
  * Debug mode: off
- * Running on http://127.0.0.1:5000
-2026-10-11 18:23:30,017 INFO  werkzeug | 127.0.0.1 - - "GET /health HTTP/1.1" 200 -
-2026-10-11 18:23:36,255 INFO  src.controllers.auth_controller | login accepted user=1
+ * Running on http://127.0.0.1:6000
+2026-10-12 17:37:28,534 INFO  werkzeug | 127.0.0.1 - - "GET /health HTTP/1.1" 200 -
+2026-10-12 17:37:28,651 INFO  src.controllers.auth_controller | login accepted user=1
 ```
 
 ### Observações entre stacks
@@ -298,10 +376,43 @@ alvo*, não o alvo:
 
 ## Como Executar
 
+### Pré-requisitos
+
+Versões usadas para rodar e validar os três projetos:
+
+| | Versão testada | Declarada no projeto |
+|---|---|---|
+| Python (p1, p3) | 3.14.7 | nenhuma — ver nota |
+| Node / npm (p2) | 24.10.0 / 11.6.0 | nenhuma (`package.json` sem `engines`) |
+
+Nenhum dos três projetos fixa versão de runtime. O piso real vem das dependências:
+`flask==3.1.1` (p1) exige Python ≥ 3.9 e `flask==3.0.0` (p3) exige ≥ 3.8, então
+**Python ≥ 3.9** cobre os dois. Essa ausência de pin não é detalhe: foi ela que tornou um
+achado de API deprecada em p3 dependente do interpretador — `datetime.utcnow()` só emite
+aviso a partir do 3.12.
+
+Para rodar as aplicações refatoradas, não é preciso nenhuma ferramenta de IA — só o runtime
+acima. Para **executar a skill** é preciso um agente que leia `SKILL.md` e os arquivos de
+referência; foi desenvolvida e rodada no Claude Code, mas nada nela é específico dele: o
+conteúdo é Markdown, então o `SKILL.md` pode ser colado como prompt em outro agente, que
+então carrega os arquivos de `references/` conforme a fase.
+
 ### A skill
 
-Dentro do diretório do projeto a auditar, invoque `/refactor-arch`. São três fases
-sequenciais, cada uma esperando confirmação antes de seguir:
+As três cópias de `.claude/skills/refactor-arch/` são idênticas (18 arquivos, 3283 linhas)
+— é o que torna o teste de agnosticismo honesto: a mesma skill, sem ajuste, nos três stacks.
+
+```bash
+cd code-smells-project    && claude "/refactor-arch"
+cd ../ecommerce-api-legacy && claude "/refactor-arch"
+cd ../task-manager-api     && claude "/refactor-arch"
+```
+
+Reexecutar um projeto que já tem relatório: apague `reports/audit-project-<N>.md` antes,
+porque o número é derivado do maior existente mais um — assim a nova execução cai no mesmo
+número em vez de criar um quarto arquivo.
+
+São três fases sequenciais, cada uma esperando confirmação antes de seguir:
 
 1. **Análise** — imprime linguagem, framework, dependências, domínio, arquitetura,
    número de arquivos e tabelas. Para aqui se o projeto não for server-side.
@@ -340,12 +451,21 @@ curl $BASE/usuarios -H "Authorization: Bearer $TOKEN" # admin
 Detalhes de endpoints, variáveis de ambiente e banco em
 [`code-smells-project/README.md`](code-smells-project/README.md).
 
-Resultado dos testes em code-smells-project/docs/manual-test-plan.md
-Alguns prints:
-code-smells-project/prints-tests
+Roteiro dos testes em
+[`code-smells-project/docs/manual-test-plan.md`](code-smells-project/docs/manual-test-plan.md)
+— 104 casos, cada um apontando o achado que verifica.
 
-Há também uma pasta para teste das rotas no app Bruno (similar a insomnia e postman) /Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/code-smells-project/bruno
-A maior parte dos prints na pasta de evidências foi feita nesse app
+Alguns prints: [`code-smells-project/prints-tests`](code-smells-project/prints-tests)
+
+As 7 evidências cobrem o index e o health check, o catálogo público de produtos, o
+relatório de vendas, e os dois lados do controle de acesso: `GET /usuarios` sem token
+falhando e, com token de admin, respondendo **sem nenhum campo de senha**.
+
+Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
+Postman): [`code-smells-project/bruno`](code-smells-project/bruno) — 30 requests em
+9 pastas (sistema, auth, produtos, usuários, pedidos, relatórios, admin, erros e
+destrutivo), com o environment `local`. A maior parte dos prints acima foi feita
+nesse app.
 
 ### A aplicação refatorada (ecommerce-api-legacy)
 
@@ -356,10 +476,11 @@ npm install
 npm start
 ```
 
-Sobe em `http://127.0.0.1:3000`. Nenhuma variável de ambiente é obrigatória em
-desenvolvimento — fora de produção os segredos são gerados aleatoriamente por
-processo, em vez de caírem em um default conhecido. Se a porta 3000 estiver
-ocupada (um `docker run -p 3000:…` basta), use `PORT=3100 npm start`.
+Sobe em `http://127.0.0.1:3100` — 3100 e não 3000 porque a porta 3000 é disputada
+por quase todo servidor de desenvolvimento e por containers que a publicam; `PORT`
+sobrescreve. Nenhuma variável de ambiente é obrigatória em desenvolvimento — fora
+de produção os segredos são gerados aleatoriamente por processo, em vez de caírem
+em um default conhecido.
 
 O banco é SQLite **em memória**: o schema e os seeds são recriados a cada boot e
 nada sobrevive a um restart. Como o segredo do token também é novo a cada
@@ -368,23 +489,41 @@ processo, reiniciar invalida os tokens já emitidos.
 As rotas administrativas exigem token com papel `admin`:
 
 ```bash
-TOKEN=$(curl -s -X POST localhost:3000/api/auth/login \
+TOKEN=$(curl -s -X POST localhost:3100/api/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"admin@fullcycle.com.br","password":"dev-admin-password"}' \
   | python3 -c 'import sys,json;print(json.load(sys.stdin)["token"])')
 
 # público: cria usuário, matrícula e pagamento em uma transação
-curl -s -X POST localhost:3000/api/checkout -H 'Content-Type: application/json' \
+curl -s -X POST localhost:3100/api/checkout -H 'Content-Type: application/json' \
   -d '{"name":"Guilherme","email":"gui@fullcycle.com.br","password":"senhaforte","courseId":2,"cardNumber":"4111222233334444"}'
 
 # admin
-curl -s localhost:3000/api/admin/financial-report -H "Authorization: Bearer $TOKEN"
+curl -s localhost:3100/api/admin/financial-report -H "Authorization: Bearer $TOKEN"
 ```
 
 Em produção a aplicação **se recusa a subir** sem `AUTH_TOKEN_SECRET` e com o
 gateway de pagamento em modo stub. Detalhes de endpoints, contrato de erro e
 limitações em
 [`ecommerce-api-legacy/README.md`](ecommerce-api-legacy/README.md).
+
+Roteiro dos testes em
+[`ecommerce-api-legacy/docs/manual-test-plan.md`](ecommerce-api-legacy/docs/manual-test-plan.md)
+— 89 casos, cada um apontando o achado que verifica.
+
+Alguns prints: [`ecommerce-api-legacy/print-tests`](ecommerce-api-legacy/print-tests)
+
+As 9 evidências cobrem os quatro endpoints e os achados mais graves: login com
+credencial válida e inválida (200 e 401), checkout bem-sucedido (201) e a
+validação de tipo que antes **derrubava o processo** — `"card"` como número JSON
+agora responde `400` com `cardNumber: "deve ser uma string"` (API-03) —, curso
+inexistente (404), remoção sem token (401) e como admin (204, DAT-03/API-05), mais
+dois prints de terminal com os dois `curl` do bloco acima rodando na 3100.
+
+Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
+Postman): [`ecommerce-api-legacy/bruno`](ecommerce-api-legacy/bruno) — 25 requests
+em 4 pastas, com o login guardando o token para as rotas admin e asserções de
+status em cada uma, então `bru run --env Local` serve como smoke test do contrato.
 
 ### A aplicação refatorada (task-manager-api)
 
@@ -401,20 +540,54 @@ python seed.py      # aplica as migrations (Alembic) e popula o banco
 python wsgi.py
 ```
 
-Sobe em `http://127.0.0.1:5000`. Rode o `seed.py` antes do primeiro boot: é ele
+Sobe em `http://127.0.0.1:6000`. Rode o `seed.py` antes do primeiro boot: é ele
 que aplica as migrations. Em produção, um servidor WSGI importa a aplicação e
 `app.run` nunca é chamado (`gunicorn wsgi:app`).
 
+A porta default é **6000**, não 5000: no macOS o *AirPlay Receiver* ocupa a 5000,
+e os outros dois projetos deste repositório também a usam — subir mais de um ao
+mesmo tempo falhava com `Address already in use`. Em contrapartida, browsers
+bloqueiam a porta 6000 (é a do X11, dá `ERR_UNSAFE_PORT`): clientes HTTP como curl
+e Bruno não são afetados, mas um front-end em página precisa de outra porta
+(`PORT=6001 python wsgi.py`).
+
 ```bash
-TOKEN=$(curl -s -X POST localhost:5000/login -H 'Content-Type: application/json' \
+TOKEN=$(curl -s -X POST localhost:6000/login -H 'Content-Type: application/json' \
   -d '{"email":"joao@email.com","password":"1234"}' \
   | python -c 'import sys,json;print(json.load(sys.stdin)["token"])')
 
-curl -s localhost:5000/tasks -H "Authorization: Bearer $TOKEN"
+curl -s localhost:6000/tasks -H "Authorization: Bearer $TOKEN"
 ```
 
 Detalhes de endpoints, modelo de acesso e migrations em
 [`task-manager-api/README.md`](task-manager-api/README.md).
+
+Alguns prints: [`task-manager-api/print-tests`](task-manager-api/print-tests)
+
+As 8 evidências cobrem o caminho feliz e os achados mais graves. `GET /users` como
+admin responde `200` com os três usuários **sem nenhum campo de senha** — era o pior
+endpoint do projeto, que devolvia o MD5 de `1234` sem exigir autenticação (SEC-02 e
+SEC-04). `GET /tasks` e `GET /users` sem token respondem `401`
+`{"error":"Autenticação necessária"}`, onde antes **toda** rota respondia `200` sem
+credencial, porque o token emitido no login nunca era verificado (SEC-05). Email
+duplicado responde `409 Conflict` `{"error":"Email já cadastrado"}` (API-05). O
+restante cobre health check, criação e busca de tasks, mais um print de terminal com
+os dois `curl` do bloco acima rodando na 6000 — nele dá para ver a forma canônica da
+task, com `overdue`, `user_name` e `category_name` presentes em todos os itens, que
+antes variava entre quatro formatos diferentes (API-05).
+
+Há também uma pasta para teste das rotas no app Bruno (similar a Insomnia e
+Postman): [`task-manager-api/bruno`](task-manager-api/bruno) — 43 requests em 6
+pastas (Auth, Meta, Tasks, Users, Categories, Reports), com o login guardando o
+token para as rotas protegidas e asserção de status em cada uma, então a coleção
+serve como smoke test do contrato. A maior parte dos prints acima foi feita nesse
+app. São dois environments: `local` (6000, o default) e `local-browser` (6001, para
+quando a API precisa ser chamada de dentro de um browser).
+
+Dos três projetos, este é o único sem plano manual roteirizado; a validação dele
+está nos artefatos gravados em `task-manager-api/.refactor-arch/` (baseline de 77
+chamadas, replay e os scripts de comparação), reexecutáveis conforme a seção
+abaixo.
 
 ### Como validar que a refatoração funcionou
 
@@ -426,7 +599,7 @@ ou uma regressão ou uma mudança declarada por escrito — nunca uma surpresa.
 ```bash
 # ecommerce-api-legacy — ferramenta compartilhada em tools/
 python3 tools/contract_check.py capture tools/specs/ecommerce-api-legacy.after.json \
-  http://127.0.0.1:3000 /tmp/replay.json
+  http://127.0.0.1:3100 /tmp/replay.json
 python3 tools/contract_check.py compare tools/baselines/ecommerce-api-legacy.before.json \
   /tmp/replay.json tools/declared/ecommerce-api-legacy.json
 # esperado: 12 declared change(s), 0 undeclared — e exit code 0

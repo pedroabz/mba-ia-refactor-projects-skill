@@ -2,37 +2,44 @@ headers {
   Content-Type: application/json
 }
 
+vars:pre-request {
+  baseUrl: http://localhost:3100
+  approvedCard: 4111222233334444
+  adminEmail: admin@fullcycle.com.br
+  adminPassword: dev-admin-password
+}
+
 docs {
   # ecommerce-api-legacy
-
+  
   Matrícula em cursos online com checkout pago. Quatro endpoints:
-
+  
   | Método | Caminho | Acesso |
   |---|---|---|
   | POST | `/api/auth/login` | público |
   | POST | `/api/checkout` | público |
   | GET | `/api/admin/financial-report` | `admin` |
   | DELETE | `/api/users/:id` | `admin` |
-
+  
   ## Como usar
-
-  Suba a aplicação (`npm start`, porta 3000) e rode **Auth / Login admin** primeiro:
+  
+  Suba a aplicação (`npm start`, porta 3100) e rode **Auth / Login admin** primeiro:
   ele guarda o token em `{{adminToken}}` via `bru.setVar`, e as pastas Admin usam
   essa variável. `Login student` guarda `{{studentToken}}`, usado para provar que um
   token válido com o papel errado recebe 403 — que é uma resposta diferente de não
   mandar token nenhum (401).
-
+  
   A coleção inteira roda em ordem com `bru run --env Local`, e cada request tem
   asserções de status, então ela serve como smoke test do contrato.
-
+  
   ## Dois detalhes do ambiente de desenvolvimento
-
+  
   - O banco é SQLite **em memória**: cada restart recria o schema e os seeds.
   - `AUTH_TOKEN_SECRET` é gerado aleatoriamente por processo fora de produção, em vez
     de cair em um default conhecido. Reiniciar a aplicação **invalida os tokens já
     emitidos** — se um 401 `Token inválido ou expirado` aparecer depois de um
     restart, é isso: rode o login de novo.
-
+  
   As senhas no environment são as fixtures de `.env.example`, não segredos. Para
   apontar esta coleção a um ambiente real, mova-as para `vars:secret` no arquivo de
   environment.

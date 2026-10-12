@@ -15,12 +15,16 @@ every call. The pre-refactor application ignores the header entirely, so the
 same script produces a comparable record on both sides of the refactor.
 """
 import json
+import os
 import re
 import sys
 
 import requests
 
-BASE = "http://127.0.0.1:5000"
+# Default matches the application's own default port (6000). Override with
+# BASE_URL when the app runs elsewhere, e.g.
+#   BASE_URL=http://127.0.0.1:6001 python .refactor-arch/capture.py out.json
+BASE = os.environ.get("BASE_URL", "http://127.0.0.1:6000").rstrip("/")
 TIMEOUT = 20
 
 # Keys whose values differ between two runs by construction.

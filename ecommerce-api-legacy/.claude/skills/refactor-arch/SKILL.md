@@ -18,6 +18,13 @@ The knowledge you need lives in `references/`. Each phase below names the file t
 acting on that phase: the instructions here are the procedure, the reference files are the
 domain knowledge.
 
+The reports you write — the analysis summary, the audit report, the completion report — are
+written in English, whatever language the codebase uses. That applies to the reports only:
+the application's own strings are its behaviour and are never translated, so error messages,
+response keys, status values, logs and comments in the code keep the language they are in.
+Identifiers, file paths and anything inside backticks likewise keep the source's own words.
+See "Language" in `references/report-template.md`.
+
 This analysis will be done in three phases done sequentially:
 
 PHASE 1 - Project Analysis:

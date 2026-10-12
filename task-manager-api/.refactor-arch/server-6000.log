@@ -1,0 +1,142 @@
+2026-10-12 17:37:28,527 INFO     src.app | application composed (debug=False, database=sqlite:////Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/tasks.db)
+ * Serving Flask app 'src.app'
+ * Debug mode: off
+2026-10-12 17:37:28,531 INFO     werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:6000
+2026-10-12 17:37:28,531 INFO     werkzeug | [33mPress CTRL+C to quit[0m
+2026-10-12 17:37:28,534 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /health HTTP/1.1" 200 -
+2026-10-12 17:37:28,651 INFO     src.controllers.auth_controller | login accepted user=1
+2026-10-12 17:37:28,652 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "POST /login HTTP/1.1" 200 -
+2026-10-12 17:37:28,653 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET / HTTP/1.1" 200 -
+2026-10-12 17:37:28,654 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /health HTTP/1.1" 200 -
+2026-10-12 17:37:28,659 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks HTTP/1.1" 200 -
+2026-10-12 17:37:28,661 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/1 HTTP/1.1" 200 -
+2026-10-12 17:37:28,662 INFO     src.middlewares.error_handler | client error 404: Task não encontrada
+2026-10-12 17:37:28,662 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,664 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/search?q=bug HTTP/1.1" 200 -
+2026-10-12 17:37:28,667 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/search?status=pending HTTP/1.1" 200 -
+2026-10-12 17:37:28,669 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/search?priority=1 HTTP/1.1" 200 -
+2026-10-12 17:37:28,671 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/search?user_id=1 HTTP/1.1" 200 -
+2026-10-12 17:37:28,672 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/search HTTP/1.1" 200 -
+2026-10-12 17:37:28,674 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/stats HTTP/1.1" 200 -
+2026-10-12 17:37:28,676 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /users HTTP/1.1" 200 -
+2026-10-12 17:37:28,677 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /users/1 HTTP/1.1" 200 -
+2026-10-12 17:37:28,678 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,679 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /users/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,680 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /users/1/tasks HTTP/1.1" 200 -
+2026-10-12 17:37:28,681 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,681 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /users/9999/tasks HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,683 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /categories HTTP/1.1" 200 -
+2026-10-12 17:37:28,686 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /reports/summary HTTP/1.1" 200 -
+2026-10-12 17:37:28,688 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /reports/user/1 HTTP/1.1" 200 -
+2026-10-12 17:37:28,689 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,689 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /reports/user/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,737 INFO     src.controllers.auth_controller | login accepted user=1
+2026-10-12 17:37:28,737 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "POST /login HTTP/1.1" 200 -
+2026-10-12 17:37:28,785 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-12 17:37:28,785 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-12 17:37:28,785 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-12 17:37:28,787 INFO     src.controllers.auth_controller | login rejected for nobody@email.com
+2026-10-12 17:37:28,787 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-12 17:37:28,787 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-12 17:37:28,788 INFO     src.middlewares.error_handler | client error 400: Email e senha são obrigatórios
+2026-10-12 17:37:28,788 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,789 INFO     src.middlewares.error_handler | client error 400: Dados inválidos
+2026-10-12 17:37:28,789 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,790 INFO     src.middlewares.error_handler | client error 400: Título é obrigatório
+2026-10-12 17:37:28,790 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,790 INFO     src.middlewares.error_handler | client error 400: Título muito curto
+2026-10-12 17:37:28,790 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,791 INFO     src.middlewares.error_handler | client error 400: Título muito longo
+2026-10-12 17:37:28,791 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,792 INFO     src.middlewares.error_handler | client error 400: Status inválido
+2026-10-12 17:37:28,792 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,793 INFO     src.middlewares.error_handler | client error 400: Prioridade deve ser entre 1 e 5
+2026-10-12 17:37:28,793 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,794 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,794 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mPOST /tasks HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,795 INFO     src.middlewares.error_handler | client error 404: Categoria não encontrada
+2026-10-12 17:37:28,795 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mPOST /tasks HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,797 INFO     src.middlewares.error_handler | client error 400: Formato de data inválido. Use YYYY-MM-DD
+2026-10-12 17:37:28,797 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,798 INFO     src.middlewares.error_handler | client error 400: Dados inválidos
+2026-10-12 17:37:28,798 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,799 INFO     src.middlewares.error_handler | client error 400: Prioridade inválida
+2026-10-12 17:37:28,799 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,800 INFO     src.middlewares.error_handler | client error 400: Parâmetro 'priority' deve ser um número inteiro
+2026-10-12 17:37:28,800 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mGET /tasks/search?priority=abc HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,801 INFO     src.middlewares.error_handler | client error 400: Parâmetro 'user_id' deve ser um número inteiro
+2026-10-12 17:37:28,801 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mGET /tasks/search?user_id=abc HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,801 INFO     src.middlewares.error_handler | client error 400: Nome é obrigatório
+2026-10-12 17:37:28,801 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,802 INFO     src.middlewares.error_handler | client error 400: Email é obrigatório
+2026-10-12 17:37:28,802 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,803 INFO     src.middlewares.error_handler | client error 400: Senha é obrigatória
+2026-10-12 17:37:28,803 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,803 INFO     src.middlewares.error_handler | client error 400: Email inválido
+2026-10-12 17:37:28,803 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,804 INFO     src.middlewares.error_handler | client error 400: Senha deve ter no mínimo 4 caracteres
+2026-10-12 17:37:28,804 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,805 INFO     src.middlewares.error_handler | client error 409: Email já cadastrado
+2026-10-12 17:37:28,805 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 409 -
+2026-10-12 17:37:28,805 INFO     src.middlewares.error_handler | client error 400: Role inválido
+2026-10-12 17:37:28,805 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,806 INFO     src.middlewares.error_handler | client error 400: Nome é obrigatório
+2026-10-12 17:37:28,806 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /categories HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,807 INFO     src.middlewares.error_handler | client error 404: Categoria não encontrada
+2026-10-12 17:37:28,807 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mPUT /categories/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,808 INFO     src.middlewares.error_handler | client error 404: Categoria não encontrada
+2026-10-12 17:37:28,808 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mDELETE /categories/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,809 INFO     src.middlewares.error_handler | client error 404: Task não encontrada
+2026-10-12 17:37:28,809 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mPUT /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,810 INFO     src.middlewares.error_handler | client error 404: Task não encontrada
+2026-10-12 17:37:28,810 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mDELETE /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,811 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,811 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mPUT /users/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,812 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,812 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mDELETE /users/9999 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,814 INFO     src.controllers.task_controller | task created id=11
+2026-10-12 17:37:28,814 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-12 17:37:28,815 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,817 INFO     src.controllers.task_controller | task updated id=11
+2026-10-12 17:37:28,817 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "PUT /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,818 INFO     src.middlewares.error_handler | client error 400: Status inválido
+2026-10-12 17:37:28,818 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPUT /tasks/11 HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,819 INFO     src.controllers.task_controller | task updated id=11
+2026-10-12 17:37:28,820 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "PUT /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,821 INFO     src.controllers.task_controller | task deleted id=11
+2026-10-12 17:37:28,821 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "DELETE /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,822 INFO     src.middlewares.error_handler | client error 404: Task não encontrada
+2026-10-12 17:37:28,822 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /tasks/11 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,824 INFO     src.controllers.category_controller | category created id=5
+2026-10-12 17:37:28,824 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[35m[1mPOST /categories HTTP/1.1[0m" 201 -
+2026-10-12 17:37:28,825 INFO     src.controllers.category_controller | category updated id=5
+2026-10-12 17:37:28,825 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "PUT /categories/5 HTTP/1.1" 200 -
+2026-10-12 17:37:28,827 INFO     src.controllers.task_controller | task created id=11
+2026-10-12 17:37:28,827 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-12 17:37:28,829 INFO     src.controllers.category_controller | category deleted id=5
+2026-10-12 17:37:28,829 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "DELETE /categories/5 HTTP/1.1" 200 -
+2026-10-12 17:37:28,830 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,831 INFO     src.controllers.task_controller | task deleted id=11
+2026-10-12 17:37:28,831 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "DELETE /tasks/11 HTTP/1.1" 200 -
+2026-10-12 17:37:28,878 INFO     src.controllers.user_controller | user created id=4
+2026-10-12 17:37:28,878 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[35m[1mPOST /users HTTP/1.1[0m" 201 -
+2026-10-12 17:37:28,880 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /users/4 HTTP/1.1" 200 -
+2026-10-12 17:37:28,881 INFO     src.controllers.user_controller | user updated id=4
+2026-10-12 17:37:28,882 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "PUT /users/4 HTTP/1.1" 200 -
+2026-10-12 17:37:28,883 INFO     src.middlewares.error_handler | client error 400: Email inválido
+2026-10-12 17:37:28,883 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPUT /users/4 HTTP/1.1[0m" 400 -
+2026-10-12 17:37:28,884 INFO     src.middlewares.error_handler | client error 409: Email já cadastrado
+2026-10-12 17:37:28,884 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPUT /users/4 HTTP/1.1[0m" 409 -
+2026-10-12 17:37:28,929 INFO     src.middlewares.error_handler | client error 403: Usuário inativo
+2026-10-12 17:37:28,929 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[31m[1mPOST /login HTTP/1.1[0m" 403 -
+2026-10-12 17:37:28,931 INFO     src.controllers.task_controller | task created id=11
+2026-10-12 17:37:28,931 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-12 17:37:28,933 INFO     src.controllers.user_controller | user deleted id=4
+2026-10-12 17:37:28,933 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "DELETE /users/4 HTTP/1.1" 200 -
+2026-10-12 17:37:28,934 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 17:37:28,934 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "[33mGET /users/4 HTTP/1.1[0m" 404 -
+2026-10-12 17:37:28,935 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks HTTP/1.1" 200 -
+2026-10-12 17:37:28,936 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /users HTTP/1.1" 200 -
+2026-10-12 17:37:28,937 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /categories HTTP/1.1" 200 -
+2026-10-12 17:37:28,938 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 17:37:28] "GET /tasks/stats HTTP/1.1" 200 -

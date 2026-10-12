@@ -84,6 +84,28 @@ breaks.
 
 Boot the app after each group. Replay the baseline at least after step 2 and at the end.
 
+## Never translate the application
+
+The transformations below are written with English examples because this file is in English.
+That is a property of the documentation, not an instruction about the code. Whatever language
+the project speaks, it keeps speaking it:
+
+- **Messages and copy** — error text, validation messages, notification bodies. A refactor
+  moves a message to a different layer; it does not rewrite the message.
+- **Response and request keys** — `dados`, `sucesso`, `erro`, `usr`, `c_id`. These are the
+  contract every client depends on. Centralizing error handling does not mean renaming `erro`
+  to `error`.
+- **Enum and status values** — `pendente`, `aprovado`, `cancelado`. These are persisted, so
+  renaming them silently invalidates every existing row.
+- **Identifiers** — functions, modules, tables, columns, routes. New files you create may use
+  the project's conventions, but existing names are not translated on the way past.
+- **Comments and logs** inside the project.
+
+A translated message is a behaviour change, and a translated key or status value is a
+breaking change. Both will show up in the baseline replay as regressions, which is the right
+outcome: they are regressions. If a project genuinely needs localizing, that is a separate
+task with its own approval.
+
 ## Deliberate behaviour changes
 
 Some fixes must change observable behaviour — that is the point of them. A secret removed
@@ -102,7 +124,9 @@ field but keep the payload shape.
 
 ## Validation and the completion report
 
-Replay the baseline against the refactored application and compare. Then report honestly:
+Replay the baseline against the refactored application and compare. Then report honestly, in
+English, following the language rule in `report-template.md` — identifiers, paths and
+anything in backticks stay in the source's own words.
 
 ```
 ================================

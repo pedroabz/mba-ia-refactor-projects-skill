@@ -11,7 +11,9 @@ cp .env.example .env     # opcional em desenvolvimento; obrigatório em produç�
 npm start
 ```
 
-A aplicação sobe em `http://127.0.0.1:3000`. O banco SQLite é em memória por padrão
+A aplicação sobe em `http://127.0.0.1:3100` — 3100 e não 3000 porque a porta 3000 é
+disputada por quase todo servidor de desenvolvimento e por containers que a publicam.
+`PORT` sobrescreve. O banco SQLite é em memória por padrão
 (`DATABASE_FILE=:memory:`), então o schema e os seeds são recriados a cada boot e nada
 sobrevive a um restart. Exemplos de requisições estão em `api.http`.
 

@@ -27,16 +27,17 @@ Expected on boot — exactly three JSON log lines, then nothing until a request 
 ```json
 {"ts":"…","level":"warn","msg":"using the stub payment gateway","env":"development"}
 {"ts":"…","level":"info","msg":"seeded development fixtures","users":2,"courses":2,"enrollments":1}
-{"ts":"…","level":"info","msg":"listening","host":"127.0.0.1","port":3000,"env":"development","database":":memory:","paymentDriver":"stub"}
+{"ts":"…","level":"info","msg":"listening","host":"127.0.0.1","port":3100,"env":"development","database":":memory:","paymentDriver":"stub"}
 ```
 
-**No stack trace.** If port 3000 is already taken (a Docker publish will do it), run
-`PORT=3100 npm start` and set `BASE` below to match — nothing else changes.
+**No stack trace.** The default port is **3100**, not 3000: port 3000 is contested by
+almost every development server and by containers that publish it. If 3100 is taken too,
+run `PORT=<n> npm start` and set `BASE` below to match — nothing else changes.
 
 ### Terminal 2 — client
 
 ```bash
-BASE=http://127.0.0.1:3000
+BASE=http://127.0.0.1:3100
 JSON='Content-Type: application/json'
 
 # body + status on one line
@@ -86,7 +87,7 @@ Autoincrement ids in this script assume that state. **Restart the server to rese
 | S1.1 | — | `NODE_ENV=production npm start` | Does not start. One line: `configuration error: Missing required environment variable AUTH_TOKEN_SECRET (signs session tokens). Production refuses to start without it; see .env.example.` Exit code 1, **no stack trace** |
 | S1.2 | — | `NODE_ENV=production AUTH_TOKEN_SECRET=$(openssl rand -hex 32) npm start` | Does not start. `PAYMENT_DRIVER=stub refuses to run in production: it approves cards without contacting a provider.` The stub cannot reach production even when everything else is configured |
 | S1.3 | — | `PORT=abc npm start` | Does not start. `configuration error: Environment variable PORT must be an integer, got "abc"` |
-| S1.4 | — | `PORT=3100 npm start` | Starts on 3100. Proves no port literal survives in application code |
+| S1.4 | — | `PORT=3200 npm start` | Starts on 3200 (`"port":3200` in the `listening` line), not on the 3100 default. Proves no port literal survives in application code |
 | S1.5 | — | `grep -rniE "pk_live\|senha_super\|admin_master" src/` | No results. The committed gateway key and database password are gone from source |
 | S1.6 | — | `grep -rln "process\.env" src/` | Exactly two files, both under `src/config/`. No other module reads the environment |
 | S1.7 | — | `test -f .env && echo present` then `git check-ignore -v .env` | If you created one, it is ignored by `.gitignore`. `.env.example` is committed and contains no values |

@@ -1,0 +1,44 @@
+meta {
+  name: Login student
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{studentEmail}}",
+    "password": "{{studentPassword}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("studentToken", res.body.token);
+  }
+}
+
+tests {
+  test("200 com papel student", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.role).to.equal("student");
+  });
+}
+
+docs {
+  Guarda `{{studentToken}}` — um token **válido** com o papel errado. É o que prova
+  que a guarda distingue 403 (autenticado, sem permissão) de 401 (sem credencial).
+
+  Se `Admin / Delete user` já rodou nesta instância, este login passa a devolver 401:
+  a remoção anonimiza a conta e apaga o e-mail e o hash. Reinicie a aplicação para
+  voltar ao estado dos seeds.
+}

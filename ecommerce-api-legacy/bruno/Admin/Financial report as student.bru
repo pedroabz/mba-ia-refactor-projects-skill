@@ -1,0 +1,28 @@
+meta {
+  name: Financial report as student
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/admin/financial-report
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{studentToken}}
+}
+
+tests {
+  test("403 — token válido, papel errado", function() {
+    expect(res.status).to.equal(403);
+    expect(res.body.error.code).to.equal("forbidden");
+  });
+}
+
+docs {
+  Exige **Login student** antes. 403 e não 401: a credencial é válida, o papel não
+  autoriza. Distinguir os dois é o que mostra que existe autorização por papel, e
+  não só autenticação.
+}

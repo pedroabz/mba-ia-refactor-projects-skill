@@ -1,0 +1,56 @@
+meta {
+  name: Listar tasks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/tasks?limit=50&offset=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 50
+  offset: 0
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("a resposta e um array puro (sem envelope)", function () {
+    expect(res.getBody()).to.be.an("array");
+  });
+
+  test("o total da colecao vem no header X-Total-Count", function () {
+    expect(res.getHeader("x-total-count")).to.match(/^\d+$/);
+  });
+
+  test("respeita o limit pedido", function () {
+    expect(res.getBody().length).to.be.at.most(50);
+  });
+
+  test("forma canonica da task", function () {
+    const t = res.getBody()[0];
+    expect(t).to.include.all.keys(
+      "id", "title", "description", "status", "priority",
+      "user_id", "category_id", "created_at", "updated_at",
+      "due_date", "tags", "overdue", "user_name", "category_name"
+    );
+  });
+}
+
+docs {
+  Aceita `?limit=` e `?offset=`. O limit é limitado no servidor
+  (`MAX_PAGE_SIZE`, 200): um limit pedido é um pedido, não uma autorização.
+
+  O corpo continua a ser um array JSON puro — a paginação foi adicionada sem
+  envolver a resposta num envelope, para não quebrar clientes. O total vai no
+  header `X-Total-Count`.
+}

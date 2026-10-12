@@ -1,0 +1,33 @@
+meta {
+  name: 400 preco nao numerico
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/produtos
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "nome": "Preco Textual",
+    "preco": "abc",
+    "estoque": 1
+  }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  Antes era 500 com o texto da excecao no corpo (API-03, API-02).
+}

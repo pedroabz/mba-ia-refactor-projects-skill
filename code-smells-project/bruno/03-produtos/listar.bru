@@ -1,0 +1,27 @@
+meta {
+  name: Listar
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/produtos?limit=50&offset=0
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("envelope paginado", function() {
+    expect(res.body.dados).to.be.an("array");
+    expect(res.body.total).to.be.a("number");
+    expect(res.body.limit).to.be.a("number");
+  });
+}
+
+docs {
+  Rota publica. `limit` maximo 200 (fixado no servidor).
+}

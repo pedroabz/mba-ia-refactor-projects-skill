@@ -1,0 +1,44 @@
+meta {
+  name: Listar users (admin/manager)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/users?limit=50&offset=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 50
+  offset: 0
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200 para admin", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("nunca devolve credencial", function () {
+    const raw = JSON.stringify(res.getBody());
+    expect(raw).to.not.include("password");
+    expect(raw).to.not.include("scrypt");
+  });
+
+  test("inclui task_count", function () {
+    expect(res.getBody()[0]).to.have.property("task_count");
+  });
+}
+
+docs {
+  Leitura em massa de dados pessoais: exige `admin` ou `manager`.
+
+  `task_count` vem de **uma** query agrupada. Antes era `len(u.tasks)` por
+  linha, o que carregava todas as colunas de todas as tasks de cada
+  utilizador para produzir um inteiro.
+}

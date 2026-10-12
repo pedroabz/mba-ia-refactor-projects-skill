@@ -1,0 +1,43 @@
+meta {
+  name: Malformed JSON
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: text
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:text {
+  {"name" "Guilherme"}
+}
+
+tests {
+  test("400 malformed_json", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body.error.code).to.equal("malformed_json");
+  });
+}
+
+docs {
+  JSON inválido de propósito: falta os dois-pontos entre a chave e o valor.
+
+  As chaves estão **balanceadas** por um motivo prático — um corpo com uma chave de
+  abertura sem fechamento é ambíguo para qualquer parser que delimite blocos por
+  chaves, e um truncamento desses arriscaria o parsing do próprio arquivo `.bru`.
+  Este corpo dispara exatamente o mesmo `entity.parse.failed` sem essa ambiguidade.
+
+  O erro vem do body parser, antes de qualquer handler rodar: ele carrega um status
+  seguro para o cliente, mas a mensagem descreve internos, então o status é
+  respeitado e a mensagem é substituída por um `code` próprio. Registrado como
+  `warn`, não `error` — nada no servidor está quebrado.
+
+  Este caminho devolvia `500 internal_error`: o error handler reconhecia apenas os
+  erros da própria aplicação e tratava qualquer outro como falha de servidor.
+}

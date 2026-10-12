@@ -1,0 +1,37 @@
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:5001
+  adminToken: eyJpZCI6MSwidGlwbyI6ImFkbWluIn0.aszstg.pWGAt7fTZOtpUGQFn79A3sLkAtA
+}
+
+docs {
+  # API da Loja — code-smells-project
+  
+  Selecione o ambiente **local** antes de rodar (canto superior direito).
+  O padrao e `http://127.0.0.1:5001`; ajuste `baseUrl` se subiu em outra porta.
+  
+  Use `localhost` apenas se o AirPlay Receiver do macOS estiver desligado — ele
+  escuta em `*:5000` e `localhost` resolve IPv6 primeiro.
+  
+  ## Ordem de uso
+  
+  1. `02-auth / Login (admin)` — grava `adminToken` no ambiente.
+  2. `02-auth / Login (cliente)` — grava `clienteToken`.
+  3. O resto das pastas usa esses tokens automaticamente.
+  
+  `03-produtos / Criar` grava `produtoId`, e `05-pedidos / Criar` grava
+  `pedidoId`, usados pelas requisicoes seguintes das mesmas pastas.
+  
+  A pasta `09-destrutivo` apaga todos os dados — rode por ultimo, ou nunca.
+  
+  ## Credenciais do seed
+  
+  | Email | Senha | Tipo |
+  |---|---|---|
+  | admin@loja.com | admin123 | admin |
+  | joao@email.com | 123456 | cliente |
+  | maria@email.com | senha123 | cliente |
+}

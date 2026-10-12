@@ -1,0 +1,29 @@
+meta {
+  name: Apagar user (so admin)
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{baseUrl}}/users/{{createdUserId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().message).to.equal("Usuário deletado com sucesso");
+  });
+}
+
+docs {
+  Exclusivo de `admin` (nem `manager` pode). As tasks do utilizador vão com
+  ele por `ON DELETE CASCADE` declarado na foreign key, com
+  `PRAGMA foreign_keys=ON` activado na fábrica de conexões — antes isso era
+  feito à mão no handler.
+}

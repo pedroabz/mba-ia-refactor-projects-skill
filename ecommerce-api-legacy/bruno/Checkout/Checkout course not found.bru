@@ -1,0 +1,38 @@
+meta {
+  name: Checkout course not found
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Curso Inexistente",
+    "email": "curso-inexistente@teste.com",
+    "password": "senhaforte",
+    "courseId": 999,
+    "cardNumber": "{{approvedCard}}"
+  }
+}
+
+tests {
+  test("404 com código estável", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body.error.code).to.equal("course_not_found");
+  });
+}
+
+docs {
+  Status não mudou (404); o corpo saiu de texto puro para o envelope JSON com um
+  `code` estável, que é o identificador no qual o cliente deve ramificar — a
+  `message` é para humanos e pode mudar (API-05).
+}

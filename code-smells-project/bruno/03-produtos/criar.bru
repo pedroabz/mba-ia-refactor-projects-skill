@@ -1,0 +1,45 @@
+meta {
+  name: Criar (admin)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/produtos
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "nome": "Camiseta O'Brien",
+    "descricao": "nome com apostrofo: quebrava o INSERT antes",
+    "preco": 59.9,
+    "estoque": 5,
+    "categoria": "vestuario"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("produtoId", res.body.dados.id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("grava produtoId", function() {
+    expect(res.body.dados.id).to.be.a("number");
+  });
+}
+
+docs {
+  Exige token de admin. Grava `produtoId` para as duas requisicoes seguintes.
+  
+  Categorias validas: informatica, moveis, vestuario, geral, eletronicos, livros.
+}

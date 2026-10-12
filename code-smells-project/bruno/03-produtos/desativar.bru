@@ -1,0 +1,25 @@
+meta {
+  name: Desativar (admin)
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/produtos/{{produtoId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Exclusao logica (`ativo = 0`): o produto sai do catalogo e o historico de pedidos que o referencia continua legivel (DAT-03).
+}

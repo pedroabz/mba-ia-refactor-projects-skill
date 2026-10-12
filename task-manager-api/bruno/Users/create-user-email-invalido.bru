@@ -1,0 +1,30 @@
+meta {
+  name: Criar user com email invalido (400)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Teste",
+    "email": "nao-e-um-email",
+    "password": "1234"
+  }
+}
+
+tests {
+  test("responde 400", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().error).to.equal("Email inválido");
+  });
+}

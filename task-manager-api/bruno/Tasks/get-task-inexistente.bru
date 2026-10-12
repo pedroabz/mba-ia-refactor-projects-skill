@@ -1,0 +1,22 @@
+meta {
+  name: Obter task inexistente (404)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/tasks/999999
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 404 em JSON", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error).to.equal("Task não encontrada");
+  });
+}

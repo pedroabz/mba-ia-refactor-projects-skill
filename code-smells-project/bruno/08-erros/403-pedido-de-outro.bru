@@ -1,0 +1,25 @@
+meta {
+  name: 403 pedido de outro usuario
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/pedidos/usuario/3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{clienteToken}}
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.getStatus()).to.equal(403);
+  });
+}
+
+docs {
+  Joao (id 2) tentando ver os pedidos da Maria (id 3). Verificacao de posse, nao so de papel.
+}

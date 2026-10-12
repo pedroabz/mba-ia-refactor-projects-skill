@@ -1,0 +1,21 @@
+meta {
+  name: Relatorio geral como user comum (403)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/reports/summary
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+tests {
+  test("responde 403", function () {
+    expect(res.getStatus()).to.equal(403);
+  });
+}

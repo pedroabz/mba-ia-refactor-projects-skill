@@ -1,0 +1,39 @@
+meta {
+  name: Delete user
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/api/users/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+tests {
+  test("204 No Content, corpo vazio", function() {
+    expect(res.status).to.equal(204);
+  });
+}
+
+docs {
+  **Destrutivo — rode por último.** Exige `{{adminToken}}`.
+
+  A remoção **anonimiza**: nome, e-mail e hash de senha são apagados e `deleted_at` é
+  marcado, mas a linha permanece. Matrículas e pagamentos são registros financeiros e
+  continuam apontando para um pai válido — o schema declara as chaves estrangeiras
+  como `ON DELETE RESTRICT` e a conexão habilita `PRAGMA foreign_keys`, então o banco
+  **recusa** qualquer deleção física que fosse orfanar esses registros (DAT-03).
+
+  Antes isto respondia `200` com a frase `"Usuário deletado, mas as matrículas e
+  pagamentos ficaram sujos no banco."` — o próprio código documentava o bug.
+
+  Depois de rodar, volte em `Financial report`: a receita de Clean Architecture segue
+  **1994**, que é o número que importa para a contabilidade, e o aluno aparece como
+  `"Conta removida"`. Antes aparecia `"Unknown"`, porque a linha havia desaparecido e
+  não havia mais como saber quem pagou.
+}

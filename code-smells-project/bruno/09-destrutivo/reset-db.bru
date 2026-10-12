@@ -1,0 +1,27 @@
+meta {
+  name: Resetar banco (admin)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/admin/reset-db
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  **Apaga todas as tabelas.** Exige token de admin e tem limite de requisicoes.
+  
+  Depois disso os usuarios do seed deixam de existir e os tokens emitidos param de valer — pare o servidor, apague `loja.db` e suba de novo para recriar a carga inicial.
+}

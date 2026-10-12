@@ -1,0 +1,52 @@
+meta {
+  name: Criar category (admin/manager)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/categories
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Categoria do Bruno",
+    "description": "Criada a partir da colecao Bruno",
+    "color": "#3498db"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("createdCategoryId", res.getBody().id);
+  }
+}
+
+tests {
+  test("responde 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("guarda a cor enviada", function () {
+    expect(res.getBody().color).to.equal("#3498db");
+  });
+}
+
+docs {
+  Escrever numa categoria afecta todas as tasks que a referenciam, por isso
+  exige `admin` ou `manager`.
+
+  `color` tem de ser `#RRGGBB` — validado nas duas rotas (criar e atualizar),
+  usando a regra recuperada do módulo de helpers que existia e nunca era
+  chamado.
+}

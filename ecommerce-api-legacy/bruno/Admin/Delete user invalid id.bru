@@ -1,0 +1,26 @@
+meta {
+  name: Delete user invalid id
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/api/users/abc
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+tests {
+  test("400 — o id é validado antes de tocar o banco", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body.error.details.id).to.equal("deve ser um número inteiro");
+  });
+}
+
+docs {
+  `req.params.id` ia direto para o `DELETE` sem validação alguma (API-03).
+}

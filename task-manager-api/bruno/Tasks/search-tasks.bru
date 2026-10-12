@@ -1,0 +1,49 @@
+meta {
+  name: Buscar tasks
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/tasks/search?q=bug&status=pending&priority=1&user_id=1&limit=50&offset=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  q: bug
+  status: pending
+  priority: 1
+  user_id: 1
+  limit: 50
+  offset: 0
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("resultados tem a forma canonica (overdue incluido)", function () {
+    const body = res.getBody();
+    if (body.length > 0) {
+      expect(body[0]).to.include.all.keys("overdue", "user_name", "category_name");
+    }
+  });
+}
+
+docs {
+  Todos os filtros são opcionais e combinam-se. `q` procura em `title` e
+  `description`.
+
+  O `%...%` do LIKE é construído em Python mas viaja como **parâmetro ligado**,
+  não como texto da query — não há concatenação de SQL aqui. Para confirmar,
+  tente `?q=' OR '1'='1`: devolve 0 resultados, não a tabela toda.
+
+  Antes da refatoração `?priority=abc` fazia `int('abc')` sem guarda e dava
+  500. Agora é 400.
+}

@@ -1,0 +1,84 @@
+2026-10-12 15:07:41,658 INFO     src.app | application composed (debug=False, database=sqlite:////Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/tasks.db)
+ * Serving Flask app 'src.app'
+ * Debug mode: off
+2026-10-12 15:07:41,665 INFO     werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5100
+2026-10-12 15:07:41,665 INFO     werkzeug | [33mPress CTRL+C to quit[0m
+2026-10-12 15:07:41,849 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:41] "GET /health HTTP/1.1" 200 -
+2026-10-12 15:07:41,995 INFO     src.controllers.auth_controller | login accepted user=1
+2026-10-12 15:07:41,995 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:41] "POST /login HTTP/1.1" 200 -
+2026-10-12 15:07:42,046 INFO     src.controllers.auth_controller | login accepted user=2
+2026-10-12 15:07:42,046 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "POST /login HTTP/1.1" 200 -
+2026-10-12 15:07:42,094 INFO     src.controllers.auth_controller | login accepted user=3
+2026-10-12 15:07:42,094 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "POST /login HTTP/1.1" 200 -
+2026-10-12 15:07:42,142 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-12 15:07:42,142 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-12 15:07:42,142 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-12 15:07:42,144 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET / HTTP/1.1" 200 -
+2026-10-12 15:07:42,145 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /health HTTP/1.1" 200 -
+2026-10-12 15:07:42,150 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks?limit=50&offset=0 HTTP/1.1" 200 -
+2026-10-12 15:07:42,153 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks?limit=3&offset=2 HTTP/1.1" 200 -
+2026-10-12 15:07:42,155 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks/1 HTTP/1.1" 200 -
+2026-10-12 15:07:42,157 INFO     src.middlewares.error_handler | client error 404: Task não encontrada
+2026-10-12 15:07:42,157 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[33mGET /tasks/999999 HTTP/1.1[0m" 404 -
+2026-10-12 15:07:42,163 INFO     src.controllers.task_controller | task created id=11
+2026-10-12 15:07:42,164 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-12 15:07:42,167 INFO     src.controllers.task_controller | task updated id=11
+2026-10-12 15:07:42,168 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "PUT /tasks/11 HTTP/1.1" 200 -
+2026-10-12 15:07:42,170 INFO     src.middlewares.error_handler | client error 400: Status inválido
+2026-10-12 15:07:42,170 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPUT /tasks/11 HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,171 INFO     src.middlewares.error_handler | client error 400: Prioridade inválida
+2026-10-12 15:07:42,171 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,173 INFO     src.controllers.task_controller | task deleted id=11
+2026-10-12 15:07:42,173 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "DELETE /tasks/11 HTTP/1.1" 200 -
+2026-10-12 15:07:42,177 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks/search?q=bug&status=pending&priority=1&user_id=1&limit=50&offset=0 HTTP/1.1" 200 -
+2026-10-12 15:07:42,179 INFO     src.middlewares.error_handler | client error 400: Parâmetro 'priority' deve ser um número inteiro
+2026-10-12 15:07:42,179 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /tasks/search?priority=abc HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,181 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks/search?q='%20OR%20'1'='1 HTTP/1.1" 200 -
+2026-10-12 15:07:42,184 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /tasks/stats HTTP/1.1" 200 -
+2026-10-12 15:07:42,185 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-12 15:07:42,186 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /tasks HTTP/1.1[0m" 401 -
+2026-10-12 15:07:42,187 WARNING  src.middlewares.auth | token rejected: bad signature
+2026-10-12 15:07:42,187 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-12 15:07:42,187 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /tasks HTTP/1.1[0m" 401 -
+2026-10-12 15:07:42,189 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /users?limit=50&offset=0 HTTP/1.1" 200 -
+2026-10-12 15:07:42,191 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-12 15:07:42,191 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-12 15:07:42,191 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /users HTTP/1.1[0m" 403 -
+2026-10-12 15:07:42,194 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /users/1 HTTP/1.1" 200 -
+2026-10-12 15:07:42,195 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-12 15:07:42,195 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /users/1 HTTP/1.1[0m" 403 -
+2026-10-12 15:07:42,248 INFO     src.controllers.user_controller | user created id=4
+2026-10-12 15:07:42,248 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[35m[1mPOST /users HTTP/1.1[0m" 201 -
+2026-10-12 15:07:42,249 INFO     src.middlewares.error_handler | client error 400: Email inválido
+2026-10-12 15:07:42,249 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,251 INFO     src.middlewares.error_handler | client error 409: Email já cadastrado
+2026-10-12 15:07:42,251 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPOST /users HTTP/1.1[0m" 409 -
+2026-10-12 15:07:42,254 INFO     src.controllers.user_controller | user updated id=4
+2026-10-12 15:07:42,255 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "PUT /users/4 HTTP/1.1" 200 -
+2026-10-12 15:07:42,256 INFO     src.middlewares.error_handler | client error 403: Apenas administradores podem alterar o papel de um usuário
+2026-10-12 15:07:42,256 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPUT /users/2 HTTP/1.1[0m" 403 -
+2026-10-12 15:07:42,259 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /users/1/tasks?limit=50&offset=0 HTTP/1.1" 200 -
+2026-10-12 15:07:42,262 INFO     src.controllers.user_controller | user deleted id=4
+2026-10-12 15:07:42,262 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "DELETE /users/4 HTTP/1.1" 200 -
+2026-10-12 15:07:42,264 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /categories HTTP/1.1" 200 -
+2026-10-12 15:07:42,267 INFO     src.controllers.category_controller | category created id=5
+2026-10-12 15:07:42,267 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[35m[1mPOST /categories HTTP/1.1[0m" 201 -
+2026-10-12 15:07:42,270 INFO     src.controllers.category_controller | category updated id=5
+2026-10-12 15:07:42,270 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "PUT /categories/5 HTTP/1.1" 200 -
+2026-10-12 15:07:42,272 INFO     src.middlewares.error_handler | client error 400: Nome é obrigatório
+2026-10-12 15:07:42,272 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPUT /categories/5 HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,273 INFO     src.middlewares.error_handler | client error 400: Cor inválida. Use o formato #RRGGBB
+2026-10-12 15:07:42,273 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPUT /categories/5 HTTP/1.1[0m" 400 -
+2026-10-12 15:07:42,275 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-12 15:07:42,275 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-12 15:07:42,275 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mPOST /categories HTTP/1.1[0m" 403 -
+2026-10-12 15:07:42,278 INFO     src.controllers.category_controller | category deleted id=5
+2026-10-12 15:07:42,278 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "DELETE /categories/5 HTTP/1.1" 200 -
+2026-10-12 15:07:42,282 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /reports/summary HTTP/1.1" 200 -
+2026-10-12 15:07:42,284 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-12 15:07:42,284 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-12 15:07:42,284 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[31m[1mGET /reports/summary HTTP/1.1[0m" 403 -
+2026-10-12 15:07:42,286 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "GET /reports/user/1 HTTP/1.1" 200 -
+2026-10-12 15:07:42,288 INFO     src.middlewares.error_handler | client error 404: Usuário não encontrado
+2026-10-12 15:07:42,288 INFO     werkzeug | 127.0.0.1 - - [12/Oct/2026 15:07:42] "[33mGET /reports/user/999999 HTTP/1.1[0m" 404 -

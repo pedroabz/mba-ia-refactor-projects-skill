@@ -1,0 +1,163 @@
+{
+  "project": "ecommerce-api-legacy-new-surface",
+  "notes": [
+    "Checks the behaviour the baseline replay cannot reach, because it did not exist or was",
+    "a crash before. Each step names the finding it verifies.",
+    "Two identities are used in one run: 'admin' proves the guarded routes work and that",
+    "pagination is clamped; 'student' proves the role check rejects a valid token with the",
+    "wrong role (403), which is different from rejecting no token at all (401).",
+    "No successful-login step is included: the response carries a freshly signed token, so",
+    "its body differs between runs by design. The `auth` block already proves login works."
+  ],
+  "auth": {
+    "admin": {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "body": { "email": "admin@fullcycle.com.br", "password": "dev-admin-password" }
+    },
+    "student": {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "body": { "email": "leonan@fullcycle.com.br", "password": "dev-student-password" }
+    }
+  },
+  "unordered": ["report-admin-default-paging", "report-limit-clamped"],
+  "steps": [
+    {
+      "id": "crash-path-card-as-number",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Tipo Errado",
+        "eml": "tipo-errado@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": 4111222233334444
+      }
+    },
+    {
+      "id": "checkout-declined-valid-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Recusado",
+        "eml": "recusado@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": "5111222233334444"
+      }
+    },
+    {
+      "id": "checkout-bad-email",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Email Ruim",
+        "eml": "nao-e-um-email",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-short-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Senha Curta",
+        "eml": "senha-curta@teste.com",
+        "pwd": "123",
+        "c_id": 1,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-course-id-not-a-number",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Curso Texto",
+        "eml": "curso-texto@teste.com",
+        "pwd": "senhaforte",
+        "c_id": "dois",
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-canonical-field-names",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "name": "Nomes Canonicos",
+        "email": "canonico@teste.com",
+        "password": "senhaforte",
+        "courseId": 2,
+        "cardNumber": "4111222233334444"
+      }
+    },
+    {
+      "id": "login-wrong-password",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "body": { "email": "admin@fullcycle.com.br", "password": "senha-errada" }
+    },
+    {
+      "id": "login-unknown-email",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "body": { "email": "ninguem@teste.com", "password": "dev-admin-password" }
+    },
+    {
+      "id": "report-unauthenticated",
+      "method": "GET",
+      "path": "/api/admin/financial-report"
+    },
+    {
+      "id": "report-as-student",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "auth": "student"
+    },
+    {
+      "id": "report-admin-default-paging",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "auth": "admin"
+    },
+    {
+      "id": "report-limit-clamped",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=99999&offset=0",
+      "auth": "admin"
+    },
+    {
+      "id": "report-second-page-empty",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=1&offset=50",
+      "auth": "admin"
+    },
+    {
+      "id": "report-bad-limit",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=abc",
+      "auth": "admin"
+    },
+    {
+      "id": "delete-unauthenticated",
+      "method": "DELETE",
+      "path": "/api/users/1"
+    },
+    {
+      "id": "delete-as-student",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "auth": "student"
+    },
+    {
+      "id": "delete-bad-id",
+      "method": "DELETE",
+      "path": "/api/users/abc",
+      "auth": "admin"
+    }
+  ]
+}

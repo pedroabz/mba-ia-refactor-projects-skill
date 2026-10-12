@@ -1,0 +1,46 @@
+meta {
+  name: Criar com priority nao numerico (400, era 500)
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/tasks
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "titulo valido",
+    "priority": "alta"
+  }
+}
+
+tests {
+  test("responde 400, nao 500", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("responde JSON, nao uma pagina HTML do debugger", function () {
+    expect(res.getHeader("content-type")).to.include("application/json");
+  });
+}
+
+docs {
+  Este era o pior caminho da aplicação original: `priority < 1` com uma string
+  levantava `TypeError`, que não era apanhado, e com `debug=True` o Flask
+  respondia com o **console interativo do Werkzeug** — cerca de 20 KB de HTML
+  que executa Python arbitrário enviado pelo navegador.
+
+  Dois caracteres de payload abriam execução remota de código. Agora é um 400
+  em JSON.
+}

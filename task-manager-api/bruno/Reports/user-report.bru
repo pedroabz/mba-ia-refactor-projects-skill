@@ -1,0 +1,38 @@
+meta {
+  name: Relatorio de um user
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/reports/user/{{adminUserId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("tem user e statistics", function () {
+    expect(res.getBody()).to.include.all.keys("user", "statistics");
+    expect(res.getBody().statistics).to.include.all.keys(
+      "total_tasks", "done", "pending", "in_progress",
+      "cancelled", "overdue", "high_priority", "completion_rate"
+    );
+  });
+}
+
+docs {
+  Próprio utilizador ou privilegiado.
+
+  `high_priority` usa a propriedade `is_high_priority` do model. Antes, o
+  limiar estava escrito à mão (`priority <= 2`) e discordava do mapa de
+  etiquetas no mesmo ficheiro, que chamava `2` de *high* — duas codificações
+  da mesma escala, em desacordo.
+}

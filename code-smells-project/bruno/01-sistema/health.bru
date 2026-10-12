@@ -1,0 +1,30 @@
+meta {
+  name: Health check
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("nao vaza configuracao", function() {
+    expect(res.body.secret_key).to.be.undefined;
+    expect(res.body.debug).to.be.undefined;
+    expect(res.body.db_path).to.be.undefined;
+    expect(res.body.counts).to.be.an("object");
+  });
+}
+
+docs {
+  Rota publica. Informa disponibilidade e volumes.
+  
+  A versao anterior devolvia SECRET_KEY, debug e o caminho do banco para qualquer chamador anonimo (SEC-01).
+}

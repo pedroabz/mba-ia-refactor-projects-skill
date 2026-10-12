@@ -1,0 +1,31 @@
+{
+  "project": "ecommerce-api-legacy-crash-probe",
+  "notes": [
+    "One step, kept out of the main spec because it terminates the server process and would",
+    "fail every step after it. Audit finding API-03: `card` arrives as a JSON number, the",
+    "handler calls cc.startsWith on it inside a sqlite3 callback, and the TypeError escapes",
+    "Express into uncaughtException. Capture against a freshly started server; the recorded",
+    "observation is the connection failure, and the probe is followed by a liveness check",
+    "that shows whether the process survived.",
+    "After the refactor this must become a 400, which is a declared contract change."
+  ],
+  "steps": [
+    {
+      "id": "checkout-card-as-number",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Tipo Errado",
+        "eml": "tipo-errado@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": 4111222233334444
+      }
+    },
+    {
+      "id": "liveness-after-probe",
+      "method": "GET",
+      "path": "/api/admin/financial-report"
+    }
+  ]
+}

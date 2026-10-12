@@ -1,0 +1,35 @@
+meta {
+  name: Listar tasks (paginado + clamp)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/tasks?limit=3&offset=2
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 3
+  offset: 2
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("devolve exatamente 3 itens", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().length).to.equal(3);
+  });
+}
+
+docs {
+  Experimente também:
+
+  - `?limit=99999` -> devolve no máximo 200 (teto do servidor)
+  - `?limit=-5` -> devolve 1 (piso)
+  - `?limit=abc` -> **400**, não 500
+}

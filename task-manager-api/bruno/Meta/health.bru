@@ -1,0 +1,29 @@
+meta {
+  name: Health
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+tests {
+  test("responde 200 sem token", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("ok");
+  });
+
+  test("nao vaza configuracao", function () {
+    const keys = Object.keys(res.getBody());
+    expect(keys).to.have.members(["status", "timestamp"]);
+  });
+}
+
+docs {
+  Liveness apenas. Reporta deliberadamente só `status` e `timestamp`: um
+  healthcheck que ecoa configuração é um achado de exposição de dados — foi
+  exatamente o caso num dos outros projetos do desafio.
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Financial report without token
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/admin/financial-report
+  body: none
+  auth: none
+}
+
+tests {
+  test("401 — sem credencial", function() {
+    expect(res.status).to.equal(401);
+    expect(res.body.error.code).to.equal("unauthorized");
+  });
+}
+
+docs {
+  Esta rota era **anônima**: devolvia a receita consolidada da plataforma e o nome de
+  cada aluno matriculado a qualquer requisitante, sob um prefixo `/admin` sem
+  nenhuma checagem de papel (SEC-05).
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Obter user de outro como user comum (403)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users/{{adminUserId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+tests {
+  test("responde 403", function () {
+    expect(res.getStatus()).to.equal(403);
+  });
+}
+
+docs {
+  Guarda de **posse**, não só de papel: o utilizador 2 não lê o utilizador 1.
+  Papel sozinho não basta quando o recurso pertence a alguém.
+
+  Trocando para `/users/{{userUserId}}` com o mesmo token dá 200.
+}

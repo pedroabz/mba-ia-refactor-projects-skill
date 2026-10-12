@@ -1,0 +1,27 @@
+meta {
+  name: Listar tasks com o token falso antigo (401)
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{baseUrl}}/tasks
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: fake-jwt-token-1
+}
+
+tests {
+  test("responde 401", function () {
+    expect(res.getStatus()).to.equal(401);
+  });
+}
+
+docs {
+  `fake-jwt-token-1` era literalmente o token que o `/login` original
+  devolvia. Agora a assinatura é verificada, por isso este valor não serve
+  — e um token válido com um caractere alterado também não.
+}

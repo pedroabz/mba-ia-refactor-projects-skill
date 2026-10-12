@@ -1,0 +1,61 @@
+meta {
+  name: Criar task
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/tasks
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Task criada pelo Bruno",
+    "description": "Criada a partir da colecao Bruno",
+    "status": "pending",
+    "priority": 2,
+    "user_id": 1,
+    "category_id": 1,
+    "due_date": "2026-12-31",
+    "tags": ["bruno", "manual"]
+  }
+}
+
+script:post-response {
+  // Guarda o id para os requests de update e delete desta pasta.
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("createdTaskId", res.getBody().id);
+  }
+}
+
+tests {
+  test("responde 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("devolve a forma canonica, ja com overdue resolvido", function () {
+    expect(res.getBody().overdue).to.equal(false);
+    expect(res.getBody().user_name).to.be.a("string");
+  });
+
+  test("tags vem como array", function () {
+    expect(res.getBody().tags).to.eql(["bruno", "manual"]);
+  });
+}
+
+docs {
+  `due_date` tem de ser `YYYY-MM-DD`. `status` tem de estar em
+  `pending|in_progress|done|cancelled`, `priority` entre 1 e 5.
+
+  Grava `{{createdTaskId}}`, usado por *Atualizar task* e *Apagar task*.
+}

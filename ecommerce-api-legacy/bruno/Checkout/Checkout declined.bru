@@ -1,0 +1,46 @@
+meta {
+  name: Checkout declined
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Recusado",
+    "email": "recusado@teste.com",
+    "password": "senhaforte",
+    "courseId": 1,
+    "cardNumber": "{{declinedCard}}"
+  }
+}
+
+tests {
+  test("402 Payment Required", function() {
+    expect(res.status).to.equal(402);
+    expect(res.body.error.code).to.equal("payment_declined");
+  });
+}
+
+docs {
+  **402, não 400**: a requisição estava bem formada e o provedor recusou — não é erro
+  do cliente. A versão anterior devolvia `400 "Pagamento recusado"` em texto puro.
+
+  E, mais importante, **nada é escrito**. A autorização acontece antes da primeira
+  escrita, então uma recusa não deixa rastro. Antes a conta era criada e comitada e
+  só depois o pagamento era decidido, de modo que um checkout recusado deixava um
+  usuário no banco com a senha default (DAT-02). Confirme tentando logar com
+  `recusado@teste.com` — deve dar 401.
+
+  Lembrando: a aprovação é um stub que aceita qualquer cartão começando com 4. É a
+  regra original, isolada atrás de uma porta que produção se recusa a usar.
+}

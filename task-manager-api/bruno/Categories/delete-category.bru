@@ -1,0 +1,33 @@
+meta {
+  name: Apagar category
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/categories/{{createdCategoryId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().message).to.equal("Categoria deletada");
+  });
+}
+
+docs {
+  As tasks que referenciavam a categoria **continuam a existir** com
+  `category_id: null`, por `ON DELETE SET NULL` declarado na foreign key.
+
+  Antes, esse resultado dependia por acidente do comportamento por omissão do
+  ORM: o schema não declarava política nenhuma, o SQLite tinha
+  `PRAGMA foreign_keys = 0` e um delete em massa deixava `category_id` a
+  apontar para uma linha inexistente. Para confirmar, crie uma task com esta
+  categoria, apague a categoria e leia a task.
+}

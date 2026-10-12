@@ -1,0 +1,32 @@
+meta {
+  name: Listar (admin)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/usuarios
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("sem credencial na resposta", function() {
+    res.body.dados.forEach(function(u) {
+      expect(u.senha).to.be.undefined;
+      expect(u.senha_hash).to.be.undefined;
+    });
+  });
+}
+
+docs {
+  Exige token de admin. A versao anterior devolvia a senha em texto puro de todos os usuarios, sem autenticacao (SEC-02).
+}

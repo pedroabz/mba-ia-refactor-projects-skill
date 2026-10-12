@@ -1,0 +1,42 @@
+meta {
+  name: Estatisticas de tasks
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/tasks/stats
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("tem os contadores e a taxa de conclusao", function () {
+    expect(res.getBody()).to.include.all.keys(
+      "total", "pending", "in_progress", "done", "cancelled",
+      "overdue", "completion_rate"
+    );
+  });
+
+  test("completion_rate e coerente com done/total", function () {
+    const b = res.getBody();
+    const expected = b.total > 0
+      ? Math.round((b.done / b.total) * 10000) / 100
+      : 0;
+    expect(b.completion_rate).to.equal(expected);
+  });
+}
+
+docs {
+  Os contadores vêm de uma query agrupada e o `overdue` é contado na base de
+  dados. Antes, isto eram 5 counts separados mais o carregamento de todas as
+  linhas para contar atrasadas num laço Python.
+}

@@ -1,0 +1,44 @@
+meta {
+  name: Login (manager)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{managerEmail}}",
+    "password": "{{managerPassword}}"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("managerToken", res.getBody().token);
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("o papel e 'manager'", function () {
+    expect(res.getBody().user.role).to.equal("manager");
+  });
+}
+
+docs {
+  `manager` é privilegiado: lê dados de outros utilizadores e escreve em
+  `/categories`, mas **não** pode apagar contas nem alterar `role` — isso é
+  exclusivo de `admin`.
+}

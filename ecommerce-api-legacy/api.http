@@ -1,31 +1,80 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://127.0.0.1:3000
 
-### Checkout - sucesso
+### Login como admin (necessário para as rotas /admin e de remoção)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@fullcycle.com.br",
+  "password": "dev-admin-password"
+}
+
+###
+@token = {{login.response.body.token}}
+
+### Checkout - sucesso (nomes canônicos)
 POST {{baseUrl}}/api/checkout
 Content-Type: application/json
 
 {
-  "usr": "Guilherme",
-  "eml": "gui@fullcycle.com.br",
+  "name": "Guilherme",
+  "email": "gui@fullcycle.com.br",
+  "password": "senhaforte",
+  "courseId": 2,
+  "cardNumber": "4111222233334444"
+}
+
+### Checkout - sucesso usando os nomes abreviados depreciados (ainda aceitos)
+POST {{baseUrl}}/api/checkout
+Content-Type: application/json
+
+{
+  "usr": "Legado",
+  "eml": "legado@fullcycle.com.br",
   "pwd": "senhaforte",
-  "c_id": 2,
+  "c_id": 1,
   "card": "4111222233334444"
 }
 
-### Checkout - pagamento recusado
+### Checkout - pagamento recusado (402)
 POST {{baseUrl}}/api/checkout
 Content-Type: application/json
 
 {
   "usr": "João",
   "eml": "joao@teste.com",
-  "pwd": "123",
+  "pwd": "senhaforte",
   "c_id": 1,
   "card": "5111222233334444"
 }
 
+### Checkout - validação (400): cartão como número, e-mail inválido, senha curta
+POST {{baseUrl}}/api/checkout
+Content-Type: application/json
+
+{
+  "name": "Tipo Errado",
+  "email": "nao-e-um-email",
+  "password": "123",
+  "courseId": 1,
+  "cardNumber": 4111222233334444
+}
+
 ### Relatório financeiro administrativo
 GET {{baseUrl}}/api/admin/financial-report
+Authorization: Bearer {{token}}
 
-### Deletar usuário
+### Relatório financeiro paginado
+GET {{baseUrl}}/api/admin/financial-report?limit=1&offset=0
+Authorization: Bearer {{token}}
+
+### Relatório sem token (401)
+GET {{baseUrl}}/api/admin/financial-report
+
+### Remover usuário (204; 404 se não existir)
+DELETE {{baseUrl}}/api/users/1
+Authorization: Bearer {{token}}
+
+### Remover usuário sem token (401)
 DELETE {{baseUrl}}/api/users/1

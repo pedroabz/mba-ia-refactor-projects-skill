@@ -1,0 +1,33 @@
+meta {
+  name: Atualizar status (admin)
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/pedidos/{{pedidoId}}/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "status": "aprovado"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Exige token de admin. Status validos: pendente, aprovado, enviado, entregue, cancelado.
+  
+  `cancelado` devolve o estoque dos itens. Pedido inexistente devolve 404 — antes respondia 200 (API-05).
+}

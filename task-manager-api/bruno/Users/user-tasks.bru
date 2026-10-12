@@ -1,0 +1,42 @@
+meta {
+  name: Tasks de um user
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/users/{{adminUserId}}/tasks?limit=50&offset=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 50
+  offset: 0
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("usa a mesma forma canonica da task", function () {
+    const body = res.getBody();
+    if (body.length > 0) {
+      expect(body[0]).to.include.all.keys(
+        "user_id", "category_id", "updated_at", "tags",
+        "overdue", "user_name", "category_name"
+      );
+    }
+  });
+}
+
+docs {
+  Antes devolvia uma forma reduzida (sem `user_id`, `category_id`, `tags` nem
+  `updated_at`) mas **com** `overdue` — a quarta forma diferente da mesma
+  entidade. Agora é a canónica.
+}

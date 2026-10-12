@@ -1,0 +1,22 @@
+meta {
+  name: Relatorio de user inexistente (404)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/reports/user/999999
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 404", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error).to.equal("Usuário não encontrado");
+  });
+}

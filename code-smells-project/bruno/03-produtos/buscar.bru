@@ -1,0 +1,21 @@
+meta {
+  name: Buscar com filtros
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/produtos/busca?q=mouse&categoria=informatica&preco_min=10&preco_max=1000
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Rota publica. `q` vai para um `LIKE` parametrizado — payload de SQL nao e executado. `preco_min` nao numerico devolve 400, nao 500.
+}

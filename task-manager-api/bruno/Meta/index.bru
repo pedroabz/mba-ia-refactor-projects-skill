@@ -1,0 +1,25 @@
+meta {
+  name: Index
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/
+  body: none
+  auth: none
+}
+
+tests {
+  test("responde 200 sem token", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("identifica o servico", function () {
+    expect(res.getBody().message).to.equal("Task Manager API");
+  });
+}
+
+docs {
+  Público. Não requer token.
+}

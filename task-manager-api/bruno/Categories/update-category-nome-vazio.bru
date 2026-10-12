@@ -1,0 +1,42 @@
+meta {
+  name: Atualizar com nome vazio (400 -- antes passava)
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/categories/{{createdCategoryId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}
+
+tests {
+  test("responde 400", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().error).to.equal("Nome é obrigatório");
+  });
+}
+
+docs {
+  Este é o caso de **drift** que a auditoria encontrou: `POST /categories`
+  exigia `name`, mas `PUT /categories/<id>` não validava nada e atribuía os
+  campos directamente do corpo — logo o nome podia ser posto a `""` pelo
+  update, violando uma regra que a API dizia aplicar.
+
+  O schema de update passou a ser derivado do de criação com `partial=True`,
+  pelo que as duas rotas não podem voltar a divergir.
+}

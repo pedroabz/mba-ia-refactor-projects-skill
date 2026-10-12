@@ -1,2 +1,6 @@
 flask==3.1.1
 flask-cors==5.0.1
+# Instaladas com o Flask, declaradas porque a aplicacao as importa diretamente:
+# werkzeug.security (hash de senha) e itsdangerous (assinatura do token).
+werkzeug==3.1.9
+itsdangerous==2.2.0

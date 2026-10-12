@@ -1,0 +1,38 @@
+meta {
+  name: Buscar com tentativa de injecao (0 resultados)
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/tasks/search?q=' OR '1'='1
+  body: none
+  auth: bearer
+}
+
+params:query {
+  q: ' OR '1'='1
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("trata o payload como texto, nao como SQL", function () {
+    // Nenhuma task tem esta string no titulo ou descricao.
+    expect(res.getBody().length).to.equal(0);
+  });
+}
+
+docs {
+  A auditoria varreu `SEC-03` e **não** encontrou achado: todas as queries
+  passam por expressões SQLAlchemy e o único f-string junto de uma query
+  monta o padrão do LIKE, que o driver liga como parâmetro.
+
+  Este request é a prova empírica disso.
+}

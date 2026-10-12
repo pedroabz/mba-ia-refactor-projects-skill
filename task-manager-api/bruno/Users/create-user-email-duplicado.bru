@@ -1,0 +1,35 @@
+meta {
+  name: Criar user com email duplicado (409)
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Duplicado",
+    "email": "{{adminEmail}}",
+    "password": "1234"
+  }
+}
+
+tests {
+  test("responde 409", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody().error).to.equal("Email já cadastrado");
+  });
+}
+
+docs {
+  409 para conflito, não 400 — o contrato original já acertava neste ponto e
+  foi mantido.
+}

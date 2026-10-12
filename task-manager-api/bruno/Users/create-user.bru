@@ -1,0 +1,51 @@
+meta {
+  name: Criar user (publico -- cadastro)
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Usuario do Bruno",
+    "email": "bruno@email.com",
+    "password": "1234",
+    "role": "user"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("createdUserId", res.getBody().id);
+  }
+}
+
+tests {
+  test("responde 201 sem token (e cadastro)", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("a resposta nao contem credencial", function () {
+    expect(res.getBody()).to.not.have.property("password");
+  });
+}
+
+docs {
+  A única escrita pública da aplicação.
+
+  A senha nunca tem default: um campo `password` ausente é erro, não motivo
+  para atribuir uma senha conhecida. É guardada como scrypt com salt
+  (`werkzeug.security`), não como MD5.
+
+  Grava `{{createdUserId}}`. Se já existir `bruno@email.com`, devolve **409**
+  — nesse caso rode `python seed.py` para recomeçar.
+}

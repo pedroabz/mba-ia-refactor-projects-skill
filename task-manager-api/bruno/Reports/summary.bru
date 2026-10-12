@@ -1,0 +1,51 @@
+meta {
+  name: Relatorio geral (admin/manager)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/reports/summary
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("tem todas as secoes do relatorio", function () {
+    expect(res.getBody()).to.include.all.keys(
+      "generated_at", "overview", "tasks_by_status",
+      "tasks_by_priority", "overdue", "recent_activity",
+      "user_productivity"
+    );
+  });
+
+  test("a escala de prioridade vem nomeada", function () {
+    expect(res.getBody().tasks_by_priority).to.include.all.keys(
+      "critical", "high", "medium", "low", "minimal"
+    );
+  });
+
+  test("nao vaza credencial na produtividade por utilizador", function () {
+    expect(JSON.stringify(res.getBody())).to.not.include("password");
+  });
+}
+
+docs {
+  Expõe a produtividade de **todos** os utilizadores, por isso exige `admin`
+  ou `manager`.
+
+  Agora custa um número fixo de queries (13), independente do volume de
+  dados: antes eram 15 counts separados, mais uma query por utilizador, mais
+  o carregamento de todas as tasks para contar atrasadas num laço Python.
+
+  A lista de atrasadas embutida tem tecto (`MAX_EMBEDDED_OVERDUE`, 100).
+  Antes não tinha nenhum — um backlog grande virava um único array gigante.
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Login com senha errada
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "joao@email.com",
+    "senha": "errada"
+  }
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.getStatus()).to.equal(401);
+  });
+}
+
+docs {
+  Mesma mensagem de email inexistente: nao revela se a conta existe.
+}

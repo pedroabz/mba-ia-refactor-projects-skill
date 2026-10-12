@@ -1,0 +1,730 @@
+{
+  "project": "code-smells-project (authenticated)",
+  "base_url": "http://127.0.0.1:5055",
+  "authenticated": true,
+  "step_count": 35,
+  "observations": [
+    {
+      "id": "index",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "endpoints": {
+          "health": "/health",
+          "login": "/login",
+          "pedidos": "/pedidos",
+          "produtos": "/produtos",
+          "relatorios": "/relatorios/vendas",
+          "usuarios": "/usuarios"
+        },
+        "mensagem": "Bem-vindo à API da Loja",
+        "versao": "1.0.0"
+      }
+    },
+    {
+      "id": "health",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "counts": {
+          "pedidos": 0,
+          "produtos": 10,
+          "usuarios": 3
+        },
+        "database": "connected",
+        "status": "ok",
+        "versao": "1.0.0"
+      }
+    },
+    {
+      "id": "produtos-list",
+      "method": "GET",
+      "path": "/produtos",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Notebook potente para jogos",
+            "estoque": 10,
+            "id": 1,
+            "nome": "Notebook Gamer",
+            "preco": 5999.99
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Mouse sem fio ergonômico",
+            "estoque": 50,
+            "id": 2,
+            "nome": "Mouse Wireless",
+            "preco": 89.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Teclado mecânico RGB",
+            "estoque": 30,
+            "id": 3,
+            "nome": "Teclado Mecânico",
+            "preco": 299.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Monitor 27 polegadas 144hz",
+            "estoque": 15,
+            "id": 4,
+            "nome": "Monitor 27''",
+            "preco": 1899.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Headset com microfone",
+            "estoque": 25,
+            "id": 5,
+            "nome": "Headset Gamer",
+            "preco": 199.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "moveis",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Cadeira ergonômica",
+            "estoque": 8,
+            "id": 6,
+            "nome": "Cadeira Gamer",
+            "preco": 1299.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Webcam 1080p",
+            "estoque": 20,
+            "id": 7,
+            "nome": "Webcam HD",
+            "preco": 249.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Hub USB 3.0 7 portas",
+            "estoque": 40,
+            "id": 8,
+            "nome": "Hub USB",
+            "preco": 79.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "SSD NVMe 1TB",
+            "estoque": 35,
+            "id": 9,
+            "nome": "SSD 1TB",
+            "preco": 449.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "vestuario",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Camiseta estampa código",
+            "estoque": 100,
+            "id": 10,
+            "nome": "Camiseta Dev",
+            "preco": 59.9
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 10
+      }
+    },
+    {
+      "id": "produto-by-id",
+      "method": "GET",
+      "path": "/produtos/1",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<VOLATILE>",
+          "descricao": "Notebook potente para jogos",
+          "estoque": 10,
+          "id": 1,
+          "nome": "Notebook Gamer",
+          "preco": 5999.99
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produtos-search-term",
+      "method": "GET",
+      "path": "/produtos/busca?q=mouse",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Mouse sem fio ergonômico",
+            "estoque": 50,
+            "id": 2,
+            "nome": "Mouse Wireless",
+            "preco": 89.9
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 1
+      }
+    },
+    {
+      "id": "produtos-search-filter",
+      "method": "GET",
+      "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=2000",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Teclado mecânico RGB",
+            "estoque": 30,
+            "id": 3,
+            "nome": "Teclado Mecânico",
+            "preco": 299.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Monitor 27 polegadas 144hz",
+            "estoque": 15,
+            "id": 4,
+            "nome": "Monitor 27''",
+            "preco": 1899.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Headset com microfone",
+            "estoque": 25,
+            "id": 5,
+            "nome": "Headset Gamer",
+            "preco": 199.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "Webcam 1080p",
+            "estoque": 20,
+            "id": 7,
+            "nome": "Webcam HD",
+            "preco": 249.9
+          },
+          {
+            "ativo": 1,
+            "categoria": "informatica",
+            "criado_em": "<VOLATILE>",
+            "descricao": "SSD NVMe 1TB",
+            "estoque": 35,
+            "id": 9,
+            "nome": "SSD 1TB",
+            "preco": 449.9
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 5
+      }
+    },
+    {
+      "id": "usuarios-list",
+      "method": "GET",
+      "path": "/usuarios",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "criado_em": "<VOLATILE>",
+            "email": "admin@loja.com",
+            "id": 1,
+            "nome": "Admin",
+            "tipo": "admin"
+          },
+          {
+            "criado_em": "<VOLATILE>",
+            "email": "joao@email.com",
+            "id": 2,
+            "nome": "João Silva",
+            "tipo": "cliente"
+          },
+          {
+            "criado_em": "<VOLATILE>",
+            "email": "maria@email.com",
+            "id": 3,
+            "nome": "Maria Santos",
+            "tipo": "cliente"
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 3
+      }
+    },
+    {
+      "id": "usuario-by-id",
+      "method": "GET",
+      "path": "/usuarios/1",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "criado_em": "<VOLATILE>",
+          "email": "admin@loja.com",
+          "id": 1,
+          "nome": "Admin",
+          "tipo": "admin"
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "pedidos-list-empty",
+      "method": "GET",
+      "path": "/pedidos",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 0
+      }
+    },
+    {
+      "id": "pedidos-by-user-empty",
+      "method": "GET",
+      "path": "/pedidos/usuario/2",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 0
+      }
+    },
+    {
+      "id": "relatorio-vendas-empty",
+      "method": "GET",
+      "path": "/relatorios/vendas",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "desconto_aplicavel": 0,
+          "faturamento_bruto": 0,
+          "faturamento_liquido": 0,
+          "pedidos_aprovados": 0,
+          "pedidos_cancelados": 0,
+          "pedidos_pendentes": 0,
+          "ticket_medio": 0,
+          "total_pedidos": 0
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-missing-404",
+      "method": "GET",
+      "path": "/produtos/9999",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Produto não encontrado",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "usuario-missing-404",
+      "method": "GET",
+      "path": "/usuarios/9999",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Usuário não encontrado",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "produto-create-invalid",
+      "method": "POST",
+      "path": "/produtos",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Preço é obrigatório",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "produto-create-badcat",
+      "method": "POST",
+      "path": "/produtos",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Categoria inválida. Válidas: ['informatica', 'moveis', 'vestuario', 'geral', 'eletronicos', 'livros']",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "login-invalid",
+      "method": "POST",
+      "path": "/login",
+      "status": 401,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Email ou senha inválidos",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "pedido-status-invalid",
+      "method": "PUT",
+      "path": "/pedidos/999/status",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Status inválido",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "usuario-create",
+      "method": "POST",
+      "path": "/usuarios",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "id": 4
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "login-valid",
+      "method": "POST",
+      "path": "/login",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "email": "admin@loja.com",
+          "id": 1,
+          "nome": "Admin",
+          "tipo": "admin"
+        },
+        "mensagem": "Login OK",
+        "sucesso": true,
+        "token": "eyJpZCI6MSwidGlwbyI6ImFkbWluIn0.asurWA.4nUqk2K7mSIfptVoyJcFlpTXgiE"
+      }
+    },
+    {
+      "id": "produto-create",
+      "method": "POST",
+      "path": "/produtos",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "id": 11
+        },
+        "mensagem": "Produto criado",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-update",
+      "method": "PUT",
+      "path": "/produtos/11",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "mensagem": "Produto atualizado",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-after-update",
+      "method": "GET",
+      "path": "/produtos/11",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<VOLATILE>",
+          "descricao": "atualizado",
+          "estoque": 5,
+          "id": 11,
+          "nome": "Produto Contrato v2",
+          "preco": 150.0
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "pedido-create",
+      "method": "POST",
+      "path": "/pedidos",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "pedido_id": 1,
+          "total": 12089.88
+        },
+        "mensagem": "Pedido criado com sucesso",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "pedido-create-nostock",
+      "method": "POST",
+      "path": "/pedidos",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Estoque insuficiente para Cadeira Gamer",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "pedidos-list",
+      "method": "GET",
+      "path": "/pedidos",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "criado_em": "<VOLATILE>",
+            "id": 1,
+            "itens": [
+              {
+                "preco_unitario": 5999.99,
+                "produto_id": 1,
+                "produto_nome": "Notebook Gamer",
+                "quantidade": 2
+              },
+              {
+                "preco_unitario": 89.9,
+                "produto_id": 2,
+                "produto_nome": "Mouse Wireless",
+                "quantidade": 1
+              }
+            ],
+            "status": "pendente",
+            "total": 12089.88,
+            "usuario_id": 2
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 1
+      }
+    },
+    {
+      "id": "pedidos-by-user",
+      "method": "GET",
+      "path": "/pedidos/usuario/2",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [
+          {
+            "criado_em": "<VOLATILE>",
+            "id": 1,
+            "itens": [
+              {
+                "preco_unitario": 5999.99,
+                "produto_id": 1,
+                "produto_nome": "Notebook Gamer",
+                "quantidade": 2
+              },
+              {
+                "preco_unitario": 89.9,
+                "produto_id": 2,
+                "produto_nome": "Mouse Wireless",
+                "quantidade": 1
+              }
+            ],
+            "status": "pendente",
+            "total": 12089.88,
+            "usuario_id": 2
+          }
+        ],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 1
+      }
+    },
+    {
+      "id": "pedido-status-update",
+      "method": "PUT",
+      "path": "/pedidos/1/status",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "mensagem": "Status atualizado",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "relatorio-vendas",
+      "method": "GET",
+      "path": "/relatorios/vendas",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "desconto_aplicavel": 1208.99,
+          "faturamento_bruto": 12089.88,
+          "faturamento_liquido": 10880.89,
+          "pedidos_aprovados": 1,
+          "pedidos_cancelados": 0,
+          "pedidos_pendentes": 0,
+          "ticket_medio": 12089.88,
+          "total_pedidos": 1
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-after-order",
+      "method": "GET",
+      "path": "/produtos/1",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<VOLATILE>",
+          "descricao": "Notebook potente para jogos",
+          "estoque": 8,
+          "id": 1,
+          "nome": "Notebook Gamer",
+          "preco": 5999.99
+        },
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-delete",
+      "method": "DELETE",
+      "path": "/produtos/11",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "mensagem": "Produto deletado",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produto-after-delete",
+      "method": "GET",
+      "path": "/produtos/11",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Produto não encontrado",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "admin-query-select",
+      "method": "POST",
+      "path": "/admin/query",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Rota não encontrada",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "admin-query-empty",
+      "method": "POST",
+      "path": "/admin/query",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "erro": "Rota não encontrada",
+        "sucesso": false
+      }
+    },
+    {
+      "id": "admin-reset-db",
+      "method": "POST",
+      "path": "/admin/reset-db",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "mensagem": "Banco de dados resetado",
+        "sucesso": true
+      }
+    },
+    {
+      "id": "produtos-after-reset",
+      "method": "GET",
+      "path": "/produtos",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "dados": [],
+        "limit": 50,
+        "offset": 0,
+        "sucesso": true,
+        "total": 0
+      }
+    }
+  ]
+}

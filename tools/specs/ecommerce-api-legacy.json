@@ -1,0 +1,132 @@
+{
+  "project": "ecommerce-api-legacy",
+  "notes": [
+    "Covers all 3 routes registered in AppManager.setupRoutes, plus the unmatched-route 404.",
+    "The database is SQLite :memory:, so the whole spec must be captured in ONE server run;",
+    "restarting resets to the boot seeds and renumbers every autoincrement id.",
+    "Order is deliberate: read the seeded state, then error paths, then writes, then re-read",
+    "to observe them, then the destructive delete and a re-read that exposes the orphans.",
+    "Step checkout-declined uses a distinct email on purpose: the declined path still commits",
+    "the user row (DAT-02), so the baseline records that behaviour rather than hiding it.",
+    "Two crash probes are kept out of this spec because they terminate the process and would",
+    "fail every later step; they live in ecommerce-api-legacy.crash.json and are captured",
+    "one at a time against a freshly started server.",
+    "The two report steps are declared unordered because the legacy handler resolves them",
+    "with manual counters and pushes rows in callback-completion order (API-01): capturing",
+    "the UNCHANGED app twice produced different course and student orders, so no fixed order",
+    "can be the contract. Every element is still compared; only position is ignored."
+  ],
+  "unordered": [
+    "report-seeded",
+    "report-after-checkouts",
+    "report-after-delete"
+  ],
+  "steps": [
+    {
+      "id": "report-seeded",
+      "method": "GET",
+      "path": "/api/admin/financial-report"
+    },
+    {
+      "id": "checkout-missing-fields",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {}
+    },
+    {
+      "id": "checkout-missing-card",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Sem Cartao",
+        "eml": "sem-cartao@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 1
+      }
+    },
+    {
+      "id": "checkout-course-not-found",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Curso Inexistente",
+        "eml": "curso-inexistente@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 999,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-declined",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "João",
+        "eml": "joao@teste.com",
+        "pwd": "123",
+        "c_id": 1,
+        "card": "5111222233334444"
+      }
+    },
+    {
+      "id": "checkout-new-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Guilherme",
+        "eml": "gui@fullcycle.com.br",
+        "pwd": "senhaforte",
+        "c_id": 2,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-existing-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Leonan",
+        "eml": "leonan@fullcycle.com.br",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": "4222333344445555"
+      }
+    },
+    {
+      "id": "checkout-no-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Sem Senha",
+        "eml": "sem-senha@teste.com",
+        "c_id": 2,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "report-after-checkouts",
+      "method": "GET",
+      "path": "/api/admin/financial-report"
+    },
+    {
+      "id": "delete-user-existing",
+      "method": "DELETE",
+      "path": "/api/users/1"
+    },
+    {
+      "id": "report-after-delete",
+      "method": "GET",
+      "path": "/api/admin/financial-report"
+    },
+    {
+      "id": "delete-user-missing",
+      "method": "DELETE",
+      "path": "/api/users/9999"
+    },
+    {
+      "id": "unmatched-route",
+      "method": "GET",
+      "path": "/api/nope"
+    }
+  ]
+}

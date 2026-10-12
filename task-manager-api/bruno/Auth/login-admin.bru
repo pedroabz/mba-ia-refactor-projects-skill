@@ -1,0 +1,67 @@
+meta {
+  name: Login (admin) -- pega o token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{adminEmail}}",
+    "password": "{{adminPassword}}"
+  }
+}
+
+script:post-response {
+  // Grava o token em {{token}} (usado por todos os requests protegidos)
+  // e em {{adminToken}}, para poder voltar ao admin depois de testar
+  // outro papel.
+  if (res.getStatus() === 200) {
+    const token = res.getBody().token;
+    bru.setEnvVar("token", token);
+    bru.setEnvVar("adminToken", token);
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("devolve um token assinado, nao o 'fake-jwt-token-<id>' antigo", function () {
+    const token = res.getBody().token;
+    expect(token).to.be.a("string");
+    expect(token.length).to.be.above(30);
+    expect(token).to.not.include("fake-jwt-token");
+  });
+
+  test("nao expoe credencial alguma na resposta", function () {
+    const raw = JSON.stringify(res.getBody());
+    expect(raw).to.not.include("password");
+    expect(raw).to.not.include("scrypt");
+  });
+
+  test("o usuario devolvido e o admin", function () {
+    expect(res.getBody().user.role).to.equal("admin");
+  });
+}
+
+docs {
+  **Rode este request primeiro.** É ele que popula `{{token}}`.
+
+  O token é assinado com `itsdangerous` usando a `SECRET_KEY` e carrega
+  `{uid, role}` mais a marca de tempo. Expira conforme `TOKEN_TTL_SECONDS`.
+
+  Antes da refatoração este endpoint devolvia a string literal
+  `fake-jwt-token-<id>`, que nenhum código verificava — o teste acima falha
+  de propósito se isso regredir.
+}

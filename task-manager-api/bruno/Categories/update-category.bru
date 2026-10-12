@@ -1,0 +1,37 @@
+meta {
+  name: Atualizar category
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/categories/{{createdCategoryId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Categoria do Bruno (renomeada)",
+    "color": "#2ecc71"
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("aplica nome e cor", function () {
+    expect(res.getBody().name).to.equal("Categoria do Bruno (renomeada)");
+    expect(res.getBody().color).to.equal("#2ecc71");
+  });
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Login (cliente)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "joao@email.com",
+    "senha": "123456"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("clienteToken", res.body.token);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("tipo cliente", function() {
+    expect(res.body.dados.tipo).to.equal("cliente");
+  });
+}
+
+docs {
+  Grava `clienteToken`. Usado nas requisicoes de posse de recurso.
+}

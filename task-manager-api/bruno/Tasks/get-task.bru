@@ -1,0 +1,33 @@
+meta {
+  name: Obter task por id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/tasks/{{taskId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("tem a mesma forma do item da listagem", function () {
+    expect(res.getBody()).to.include.all.keys(
+      "overdue", "user_name", "category_name"
+    );
+  });
+}
+
+docs {
+  Antes da refatoração este endpoint devolvia `overdue` mas omitia
+  `user_name` e `category_name`, enquanto a listagem devolvia os três — eram
+  quatro formas diferentes da mesma entidade pela API. Agora é uma só.
+}

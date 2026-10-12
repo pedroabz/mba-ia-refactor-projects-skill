@@ -1,0 +1,136 @@
+2026-10-11 18:21:33,807 INFO     src.app | application composed (debug=False, database=sqlite:////Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/tasks.db)
+ * Serving Flask app 'src.app'
+ * Debug mode: off
+2026-10-11 18:21:33,814 INFO     werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-11 18:21:33,814 INFO     werkzeug | [33mPress CTRL+C to quit[0m
+2026-10-11 18:21:33,840 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:33] "GET /health HTTP/1.1" 200 -
+2026-10-11 18:21:33,982 INFO     src.controllers.auth_controller | login accepted user=1
+2026-10-11 18:21:33,982 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:33] "POST /login HTTP/1.1" 200 -
+2026-10-11 18:21:34,029 INFO     src.controllers.auth_controller | login accepted user=2
+2026-10-11 18:21:34,029 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "POST /login HTTP/1.1" 200 -
+2026-10-11 18:21:34,074 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,074 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,075 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,076 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,076 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,077 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,077 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /tasks HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,077 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,077 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,078 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,078 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /tasks/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,079 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,079 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mDELETE /tasks/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,080 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,080 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks/search HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,080 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,080 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks/stats HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,081 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,081 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /users HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,082 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,082 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /users/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,083 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,083 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /users/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,083 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,084 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mDELETE /users/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,084 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,084 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /users/1/tasks HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,085 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,085 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /categories HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,086 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,086 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /categories HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,086 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,086 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /categories/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,087 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,087 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mDELETE /categories/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,087 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,087 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /reports/summary HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,088 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,088 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /reports/user/1 HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,089 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET / HTTP/1.1" 200 -
+2026-10-11 18:21:34,089 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /health HTTP/1.1" 200 -
+2026-10-11 18:21:34,090 INFO     src.middlewares.error_handler | client error 400: Dados inválidos
+2026-10-11 18:21:34,090 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2026-10-11 18:21:34,091 WARNING  src.middlewares.auth | token rejected: bad signature
+2026-10-11 18:21:34,091 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,091 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,091 WARNING  src.middlewares.auth | token rejected: bad signature
+2026-10-11 18:21:34,091 INFO     src.middlewares.error_handler | client error 401: Autenticação necessária
+2026-10-11 18:21:34,091 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,093 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-11 18:21:34,093 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-11 18:21:34,093 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /users HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,095 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /users HTTP/1.1" 200 -
+2026-10-11 18:21:34,096 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-11 18:21:34,096 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /users/1 HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,099 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /users/2 HTTP/1.1" 200 -
+2026-10-11 18:21:34,100 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin',)
+2026-10-11 18:21:34,100 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-11 18:21:34,100 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mDELETE /users/3 HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,101 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-11 18:21:34,101 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-11 18:21:34,101 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /reports/summary HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,102 INFO     src.middlewares.auth | role check failed: user 2 has user, needs one of ('admin', 'manager')
+2026-10-11 18:21:34,102 INFO     src.middlewares.error_handler | client error 403: Permissão insuficiente para esta operação
+2026-10-11 18:21:34,102 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /categories HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,103 INFO     src.middlewares.error_handler | client error 403: Apenas administradores podem alterar o papel de um usuário
+2026-10-11 18:21:34,103 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /users/2 HTTP/1.1[0m" 403 -
+2026-10-11 18:21:34,104 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /users/1 HTTP/1.1" 200 -
+2026-10-11 18:21:34,105 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /users HTTP/1.1" 200 -
+2026-10-11 18:21:34,151 INFO     src.controllers.auth_controller | login accepted user=1
+2026-10-11 18:21:34,151 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "POST /login HTTP/1.1" 200 -
+2026-10-11 18:21:34,153 INFO     src.middlewares.error_handler | client error 400: Prioridade inválida
+2026-10-11 18:21:34,153 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 18:21:34,155 INFO     src.middlewares.error_handler | client error 400: Nome é obrigatório
+2026-10-11 18:21:34,155 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /categories/1 HTTP/1.1[0m" 400 -
+2026-10-11 18:21:34,157 INFO     src.middlewares.error_handler | client error 400: Cor inválida. Use o formato #RRGGBB
+2026-10-11 18:21:34,157 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPUT /categories/1 HTTP/1.1[0m" 400 -
+2026-10-11 18:21:34,157 INFO     src.middlewares.error_handler | http error 404 on Not Found
+2026-10-11 18:21:34,158 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[33mGET /no-such-route HTTP/1.1[0m" 404 -
+2026-10-11 18:21:34,159 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /tasks?limit=3 HTTP/1.1" 200 -
+2026-10-11 18:21:34,161 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "GET /tasks?limit=99999 HTTP/1.1" 200 -
+2026-10-11 18:21:34,162 INFO     src.middlewares.error_handler | client error 400: Parâmetro 'limit' deve ser um número inteiro
+2026-10-11 18:21:34,162 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mGET /tasks?limit=abc HTTP/1.1[0m" 400 -
+2026-10-11 18:21:34,209 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,209 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,209 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,256 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,256 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,256 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,305 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,305 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,305 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,353 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,353 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,353 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,401 INFO     src.controllers.auth_controller | login rejected for joao@email.com
+2026-10-11 18:21:34,401 INFO     src.middlewares.error_handler | client error 401: Credenciais inválidas
+2026-10-11 18:21:34,401 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 18:21:34,402 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,402 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,402 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,403 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,403 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,403 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,404 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,404 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,404 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,404 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,404 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,405 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,405 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,405 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,405 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,406 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,406 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,406 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,407 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,407 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,407 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,407 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,407 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,407 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -
+2026-10-11 18:21:34,408 INFO     flask-limiter | ratelimit 10 per 1 minute (127.0.0.1) exceeded at endpoint: auth.login
+2026-10-11 18:21:34,408 INFO     src.middlewares.error_handler | http error 429 on Too Many Requests
+2026-10-11 18:21:34,408 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 18:21:34] "[31m[1mPOST /login HTTP/1.1[0m" 429 -

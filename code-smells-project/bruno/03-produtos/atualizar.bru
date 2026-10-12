@@ -1,0 +1,35 @@
+meta {
+  name: Atualizar (admin)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/produtos/{{produtoId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "nome": "Camiseta Editada",
+    "descricao": "atualizada",
+    "preco": 69.9,
+    "estoque": 7,
+    "categoria": "vestuario"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Exige token de admin. Aplica as mesmas regras da criacao — antes a atualizacao nao validava tamanho de nome nem categoria (QUA-01).
+}

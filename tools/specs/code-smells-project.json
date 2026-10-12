@@ -1,0 +1,68 @@
+{
+  "project": "code-smells-project",
+  "notes": [
+    "Covers all 19 routes registered in app.py.",
+    "Order is deliberate: reads on seeded data, then error paths, then writes, then",
+    "re-reads that observe the writes, with the destructive admin routes last.",
+    "Replay requires a fresh database (delete loja.db first) so autoincrement ids match."
+  ],
+  "steps": [
+    {"id": "index",                  "method": "GET",    "path": "/"},
+    {"id": "health",                 "method": "GET",    "path": "/health"},
+
+    {"id": "produtos-list",          "method": "GET",    "path": "/produtos"},
+    {"id": "produto-by-id",          "method": "GET",    "path": "/produtos/1"},
+    {"id": "produtos-search-term",   "method": "GET",    "path": "/produtos/busca?q=mouse"},
+    {"id": "produtos-search-filter", "method": "GET",    "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=2000"},
+    {"id": "usuarios-list",          "method": "GET",    "path": "/usuarios"},
+    {"id": "usuario-by-id",          "method": "GET",    "path": "/usuarios/1"},
+    {"id": "pedidos-list-empty",     "method": "GET",    "path": "/pedidos"},
+    {"id": "pedidos-by-user-empty",  "method": "GET",    "path": "/pedidos/usuario/2"},
+    {"id": "relatorio-vendas-empty", "method": "GET",    "path": "/relatorios/vendas"},
+
+    {"id": "produto-missing-404",    "method": "GET",    "path": "/produtos/9999"},
+    {"id": "usuario-missing-404",    "method": "GET",    "path": "/usuarios/9999"},
+    {"id": "produto-create-invalid", "method": "POST",   "path": "/produtos",
+     "body": {"nome": "A"}},
+    {"id": "produto-create-badcat",  "method": "POST",   "path": "/produtos",
+     "body": {"nome": "Teste Categoria", "preco": 10, "estoque": 1, "categoria": "inexistente"}},
+    {"id": "login-invalid",          "method": "POST",   "path": "/login",
+     "body": {"email": "admin@loja.com", "senha": "senha-errada"}},
+    {"id": "pedido-status-invalid",  "method": "PUT",    "path": "/pedidos/999/status",
+     "body": {"status": "estado-invalido"}},
+
+    {"id": "usuario-create",         "method": "POST",   "path": "/usuarios",
+     "body": {"nome": "Contract Check", "email": "contract@check.local", "senha": "s3nha"}},
+    {"id": "login-valid",            "method": "POST",   "path": "/login",
+     "body": {"email": "admin@loja.com", "senha": "admin123"}},
+    {"id": "produto-create",         "method": "POST",   "path": "/produtos",
+     "body": {"nome": "Produto Contrato", "descricao": "criado pelo contract check",
+              "preco": 123.45, "estoque": 7, "categoria": "informatica"}},
+    {"id": "produto-update",         "method": "PUT",    "path": "/produtos/11",
+     "body": {"nome": "Produto Contrato v2", "descricao": "atualizado",
+              "preco": 150.0, "estoque": 5, "categoria": "informatica"}},
+    {"id": "produto-after-update",   "method": "GET",    "path": "/produtos/11"},
+
+    {"id": "pedido-create",          "method": "POST",   "path": "/pedidos",
+     "body": {"usuario_id": 2, "itens": [{"produto_id": 1, "quantidade": 2},
+                                          {"produto_id": 2, "quantidade": 1}]}},
+    {"id": "pedido-create-nostock",  "method": "POST",   "path": "/pedidos",
+     "body": {"usuario_id": 2, "itens": [{"produto_id": 6, "quantidade": 9999}]}},
+    {"id": "pedidos-list",           "method": "GET",    "path": "/pedidos"},
+    {"id": "pedidos-by-user",        "method": "GET",    "path": "/pedidos/usuario/2"},
+    {"id": "pedido-status-update",   "method": "PUT",    "path": "/pedidos/1/status",
+     "body": {"status": "aprovado"}},
+    {"id": "relatorio-vendas",       "method": "GET",    "path": "/relatorios/vendas"},
+    {"id": "produto-after-order",    "method": "GET",    "path": "/produtos/1"},
+
+    {"id": "produto-delete",         "method": "DELETE", "path": "/produtos/11"},
+    {"id": "produto-after-delete",   "method": "GET",    "path": "/produtos/11"},
+
+    {"id": "admin-query-select",     "method": "POST",   "path": "/admin/query",
+     "body": {"sql": "SELECT COUNT(*) AS total FROM produtos"}},
+    {"id": "admin-query-empty",      "method": "POST",   "path": "/admin/query",
+     "body": {"sql": ""}},
+    {"id": "admin-reset-db",         "method": "POST",   "path": "/admin/reset-db"},
+    {"id": "produtos-after-reset",   "method": "GET",    "path": "/produtos"}
+  ]
+}

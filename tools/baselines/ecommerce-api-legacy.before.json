@@ -1,0 +1,200 @@
+{
+  "project": "ecommerce-api-legacy",
+  "base_url": "http://localhost:3000",
+  "authenticated": false,
+  "unordered": [
+    "report-seeded",
+    "report-after-checkouts",
+    "report-after-delete"
+  ],
+  "step_count": 13,
+  "observations": [
+    {
+      "id": "report-seeded",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Docker",
+          "revenue": 0,
+          "students": []
+        },
+        {
+          "course": "Clean Architecture",
+          "revenue": 997,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checkout-missing-fields",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "text/html",
+      "body": "Bad Request"
+    },
+    {
+      "id": "checkout-missing-card",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "text/html",
+      "body": "Bad Request"
+    },
+    {
+      "id": "checkout-course-not-found",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 404,
+      "content_type": "text/html",
+      "body": "Curso não encontrado"
+    },
+    {
+      "id": "checkout-declined",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "text/html",
+      "body": "Pagamento recusado"
+    },
+    {
+      "id": "checkout-new-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "msg": "Sucesso",
+        "enrollment_id": 2
+      }
+    },
+    {
+      "id": "checkout-existing-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "msg": "Sucesso",
+        "enrollment_id": 3
+      }
+    },
+    {
+      "id": "checkout-no-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 200,
+      "content_type": "application/json",
+      "body": {
+        "msg": "Sucesso",
+        "enrollment_id": 4
+      }
+    },
+    {
+      "id": "report-after-checkouts",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 1994,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            },
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 994,
+          "students": [
+            {
+              "student": "Sem Senha",
+              "paid": 497
+            },
+            {
+              "student": "Guilherme",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delete-user-existing",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "status": 200,
+      "content_type": "text/html",
+      "body": "Usuário deletado, mas as matrículas e pagamentos ficaram sujos no banco."
+    },
+    {
+      "id": "report-after-delete",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 1994,
+          "students": [
+            {
+              "student": "Unknown",
+              "paid": 997
+            },
+            {
+              "student": "Unknown",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 994,
+          "students": [
+            {
+              "student": "Guilherme",
+              "paid": 497
+            },
+            {
+              "student": "Sem Senha",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delete-user-missing",
+      "method": "DELETE",
+      "path": "/api/users/9999",
+      "status": 200,
+      "content_type": "text/html",
+      "body": "Usuário deletado, mas as matrículas e pagamentos ficaram sujos no banco."
+    },
+    {
+      "id": "unmatched-route",
+      "method": "GET",
+      "path": "/api/nope",
+      "status": 404,
+      "content_type": "text/html",
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/nope</pre>\n</body>\n</html>"
+    }
+  ]
+}

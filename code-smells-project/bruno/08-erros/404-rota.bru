@@ -1,0 +1,25 @@
+meta {
+  name: 404 rota inexistente
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/rota-que-nao-existe
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+  
+  test("responde JSON, nao HTML", function() {
+    expect(res.body.sucesso).to.equal(false);
+  });
+}
+
+docs {
+  Antes devolvia a pagina HTML padrao do Flask.
+}

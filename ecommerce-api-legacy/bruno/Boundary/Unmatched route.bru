@@ -1,0 +1,32 @@
+meta {
+  name: Unmatched route
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/nope
+  body: none
+  auth: none
+}
+
+tests {
+  test("404 em JSON, não a página HTML do Express", function() {
+    expect(res.status).to.equal(404);
+    expect(res.headers["content-type"]).to.include("application/json");
+    expect(res.body.error.code).to.equal("route_not_found");
+  });
+
+  test("headers de segurança presentes, X-Powered-By ausente", function() {
+    expect(res.headers["x-content-type-options"]).to.equal("nosniff");
+    expect(res.headers["x-frame-options"]).to.equal("DENY");
+    expect(res.headers["referrer-policy"]).to.equal("no-referrer");
+    expect(res.headers["x-powered-by"]).to.equal(undefined);
+  });
+}
+
+docs {
+  Qualquer rota inexistente caía no handler padrão do Express, que devolve HTML — e,
+  com `NODE_ENV` indefinido, stack trace junto. Agora é o mesmo envelope JSON de
+  todas as outras falhas (API-02).
+}

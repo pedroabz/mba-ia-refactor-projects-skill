@@ -1,0 +1,28 @@
+meta {
+  name: Login com payload de injecao
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "joao@email.com",
+    "senha": "' OR '1'='1"
+  }
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.getStatus()).to.equal(401);
+  });
+}
+
+docs {
+  Na versao anterior isto autenticava como o primeiro usuario da tabela: a consulta concatenava email e senha (SEC-03).
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Listar tasks sem token (401)
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/tasks
+  body: none
+  auth: none
+}
+
+tests {
+  test("responde 401", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().error).to.equal("Autenticação necessária");
+  });
+}
+
+docs {
+  Caminho negativo. Antes da refatoração **todos** os endpoints respondiam
+  200 sem credencial alguma: o token emitido no login nunca era verificado
+  por nenhum código.
+}

@@ -1,0 +1,35 @@
+meta {
+  name: Login unknown email
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "ninguem@teste.com",
+    "password": "{{adminPassword}}"
+  }
+}
+
+tests {
+  test("401 idêntico ao de senha errada", function() {
+    expect(res.status).to.equal(401);
+    expect(res.body.error.code).to.equal("unauthorized");
+    expect(res.body.error.message).to.equal("Credenciais inválidas");
+  });
+}
+
+docs {
+  Mesmo status e mesma mensagem de **Login wrong password** — um e-mail desconhecido
+  não deve ser distinguível de uma senha errada.
+}

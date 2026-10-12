@@ -1,0 +1,42 @@
+meta {
+  name: Atualizar user
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/users/{{createdUserId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Usuario do Bruno (renomeado)",
+    "active": true
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("aplica o nome e nao devolve credencial", function () {
+    expect(res.getBody().name).to.equal("Usuario do Bruno (renomeado)");
+    expect(res.getBody()).to.not.have.property("password");
+  });
+}
+
+docs {
+  Depende de *Criar user*. `active` é tipado como booleano — antes aceitava
+  qualquer valor JSON dentro de uma coluna booleana.
+}

@@ -1,0 +1,45 @@
+meta {
+  name: Checkout invalid field values
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Tudo Errado",
+    "email": "nao-e-um-email",
+    "password": "123",
+    "courseId": "dois",
+    "cardNumber": "4111-2222-3333-4444"
+  }
+}
+
+tests {
+  test("400 com um erro por campo, todos de uma vez", function() {
+    expect(res.status).to.equal(400);
+    const d = res.body.error.details;
+    expect(d.email).to.equal("deve ser um e-mail válido");
+    expect(d.password).to.equal("deve ter no mínimo 8 caracteres");
+    expect(d.courseId).to.equal("deve ser um número inteiro");
+    expect(d.cardNumber).to.equal("deve conter apenas dígitos");
+  });
+}
+
+docs {
+  Quatro regras de uma vez: formato de e-mail, tamanho mínimo de senha, tipo do id
+  do curso e formato do cartão. A validação devolve **todos** os campos inválidos em
+  uma resposta, em vez de falhar no primeiro.
+
+  Antes havia uma única checagem de truthiness para os cinco campos, o que deixava
+  passar qualquer coisa de qualquer tipo (API-03).
+}

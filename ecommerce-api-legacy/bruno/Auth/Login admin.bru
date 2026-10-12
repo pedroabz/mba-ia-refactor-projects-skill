@@ -1,0 +1,51 @@
+meta {
+  name: Login admin
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{adminEmail}}",
+    "password": "{{adminPassword}}"
+  }
+}
+
+script:post-response {
+  // Guarda o token para as pastas Admin. setVar é runtime: não escreve no
+  // arquivo de environment, então o token não acaba commitado.
+  if (res.status === 200) {
+    bru.setVar("adminToken", res.body.token);
+  }
+}
+
+tests {
+  test("200 com token, validade e papel", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.token).to.be.a("string");
+    expect(res.body.expiresInSeconds).to.be.a("number");
+    expect(res.body.role).to.equal("admin");
+  });
+
+  test("a resposta não devolve hash de senha", function() {
+    expect(JSON.stringify(res.body)).to.not.include("scrypt");
+  });
+}
+
+docs {
+  **Rode este primeiro.** Guarda `{{adminToken}}`, usado por toda a pasta Admin.
+
+  Este endpoint não existia antes da refatoração: a aplicação armazenava uma senha
+  para cada usuário e nunca comparava nenhuma — a coluna era somente-escrita, e é
+  por isso que nada podia ser protegido (SEC-04, SEC-05).
+}

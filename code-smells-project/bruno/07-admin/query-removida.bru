@@ -1,0 +1,31 @@
+meta {
+  name: Query arbitraria (removida)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/admin/query
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "sql": "SELECT COUNT(*) FROM produtos"
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+}
+
+docs {
+  Espera 404 **por design**. Este endpoint executava SQL arbitrario enviado pelo cliente e foi removido, nao parametrizado: nao existe versao segura dele (SEC-05). Fica aqui como documentacao.
+}

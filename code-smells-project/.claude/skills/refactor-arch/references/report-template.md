@@ -4,6 +4,51 @@ The formats below are what the operator reads to decide whether to approve the n
 so they are fixed: a reviewer should be able to compare two runs of two different projects
 line by line.
 
+## Language
+
+**Write the reports in English** — field labels, finding titles, descriptions, impacts and
+recommendations. This holds regardless of the language the codebase is written in, and it is
+the strongest pull to resist: a project whose identifiers and comments are in another
+language invites matching it, which produces reports that cannot be compared across projects
+and that mix two languages inside one finding. Translation to another language, if wanted, is
+a separate pass over the finished report.
+
+**This rule governs the reports and nothing else.** It is about the documents this skill
+writes — the analysis summary, the audit report, the completion report. It says nothing about
+the language of the application being audited, and it is never a reason to change a single
+string in the code. The application's own words are its behaviour:
+
+- **User-facing messages** — error text, validation messages, response bodies, notification
+  copy. `{"erro": "Produto não encontrado"}` stays exactly that.
+- **Response and request keys** — `dados`, `sucesso`, `erro`, `usr`, `eml`. These are the API
+  contract; renaming them breaks every client.
+- **Enum and status values** — `pendente`, `aprovado`, `cancelado`. These are stored in the
+  database, so changing them invalidates existing rows.
+- **Log messages, comments and documentation** inside the project.
+
+Translating any of those is a breaking change dressed as a refactor. If a project's messages
+genuinely should be localized, that is its own task with its own approval — not something to
+fold into an architecture refactor.
+
+**Identifiers are not prose and are never translated.** File paths, table and column names,
+function names, route paths, configuration keys and anything inside backticks or a code
+fence stay exactly as they appear in the source. Translating `pedidos` to "orders" or
+`criar_produto` to "create_product" makes the finding impossible to locate in the code, which
+defeats the purpose of recording a location at all.
+
+So in a Portuguese codebase, a finding reads:
+
+```
+### [CRITICAL] Hardcoded Credentials Exposed Through Health Endpoint
+ID: SEC-01
+File: app.py:7, controllers.py:289
+Description: `SECRET_KEY` is assigned the literal `'minha-chave-super-secreta-123'` in
+             `app.py:7`, and `health_check` returns the same value in its response body
+             alongside `debug` and `ambiente` (controllers.py:289).
+```
+
+English sentences, Portuguese identifiers and literals, untouched.
+
 Severity definitions are not repeated here — they live in `anti-patterns.md`, which is their
 single home. Use that scale.
 
@@ -19,12 +64,40 @@ PHASE 1: PROJECT ANALYSIS
 Language:      <language + version if pinned>
 Framework:     <framework + version from the manifest>
 Dependencies:  <direct dependencies, comma separated>
-Domain:        <what the application does, in the codebase's own vocabulary>
+Domain:        <business domain> (<key entities>)
 Architecture:  <one sentence: current state, measured not guessed>
 Source files:  <N> files analyzed
 DB tables:     <table names, or "none">
 ================================
 ```
+
+**One line per field. No field is a paragraph.** Each is a single value or a single
+sentence; `Architecture` is the only one that is a sentence at all. This summary exists to
+be scanned in a few seconds and approved or rejected, so a field that expands into bullets,
+sub-headings or a route inventory has stopped doing its job — and the reviewer can no longer
+tell at a glance whether the stack was identified correctly.
+
+**The summary reports facts, not judgements.** No findings, no severities, no line numbers,
+no commentary on what is insecure or unenforced. Problems noticed while profiling are
+carried into the audit, where they get confirmed and classified. Writing them here both
+pre-empts the audit and escapes its false-positive guards.
+
+A filled example, matching the shape the challenge itself specifies:
+
+```
+Language:      Python
+Framework:     Flask 3.1.1
+Dependencies:  flask-cors
+Domain:        E-commerce (produtos, usuarios, pedidos, itens_pedido)
+Architecture:  Monolithic — 4 files, no layer separation, routes and SQL in the same modules
+Source files:  4 files analyzed
+DB tables:     produtos, usuarios, pedidos, itens_pedido
+```
+
+A trailing noun like "API" or "service" after the business phrase is fine —
+`E-commerce API (produtos, pedidos, usuarios)` is exactly what the challenge's own example
+shows. What breaks the field is leading with the technical shape, or expanding it into prose
+about what the software does. See "Domain" in `project-analysis.md`.
 
 Every later judgement inherits this profile, so it is worth a reviewer's five seconds here
 rather than five minutes into a report built on the wrong stack.

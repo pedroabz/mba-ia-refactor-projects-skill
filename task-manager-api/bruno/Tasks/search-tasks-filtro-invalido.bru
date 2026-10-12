@@ -1,0 +1,30 @@
+meta {
+  name: Buscar com priority invalido (400, era 500)
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/tasks/search?priority=abc
+  body: none
+  auth: bearer
+}
+
+params:query {
+  priority: abc
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 400, nao 500", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  Rejeitar é melhor do que ignorar em silêncio: um filtro mal formado que
+  devolvesse a coleção inteira com 200 seria pior do que o 500 original.
+}

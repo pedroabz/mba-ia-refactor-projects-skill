@@ -18,6 +18,13 @@ The knowledge you need lives in `references/`. Each phase below names the file t
 acting on that phase: the instructions here are the procedure, the reference files are the
 domain knowledge.
 
+The reports you write — the analysis summary, the audit report, the completion report — are
+written in English, whatever language the codebase uses. That applies to the reports only:
+the application's own strings are its behaviour and are never translated, so error messages,
+response keys, status values, logs and comments in the code keep the language they are in.
+Identifiers, file paths and anything inside backticks likewise keep the source's own words.
+See "Language" in `references/report-template.md`.
+
 This analysis will be done in three phases done sequentially:
 
 PHASE 1 - Project Analysis:
@@ -32,6 +39,12 @@ It has to contain:
 - Domain correctly described
 - Number of source files analyzed
 - DB tables (if applicable)
+
+This phase reports facts, one line per field, and nothing else. Problems you notice while
+reading the code are carried into Phase 2, where the catalog confirms and classifies them —
+do not put findings, severities or line numbers in this summary. The domain is the business
+the software serves, not the software: `E-commerce (produtos, pedidos, usuarios)`, never a
+description of the API.
 
 If the project is not a server-side application — a single-page frontend, a CLI tool or a
 library — print the summary, state that the MVC target of this skill does not apply, and

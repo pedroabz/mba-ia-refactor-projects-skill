@@ -1,0 +1,55 @@
+meta {
+  name: Atualizar task
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/tasks/{{createdTaskId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "title": "Task atualizada pelo Bruno",
+    "status": "in_progress",
+    "priority": 1
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("aplica so os campos enviados", function () {
+    expect(res.getBody().title).to.equal("Task atualizada pelo Bruno");
+    expect(res.getBody().status).to.equal("in_progress");
+    expect(res.getBody().priority).to.equal(1);
+  });
+
+  test("campos omitidos nao sao redefinidos", function () {
+    // O schema de update e derivado do de criacao com partial=True e sem
+    // load_default, exatamente para que omitir um campo nao o zere.
+    expect(res.getBody().description).to.equal("Criada a partir da colecao Bruno");
+    expect(res.getBody().tags).to.eql(["bruno", "manual"]);
+  });
+}
+
+docs {
+  Depende de *Criar task* ter corrido (usa `{{createdTaskId}}`).
+
+  O teste "campos omitidos não são redefinidos" guarda um erro fácil de
+  introduzir: num schema marshmallow, `load_default` aplica-se mesmo com
+  `partial=True`, pelo que declarar defaults no conjunto partilhado de campos
+  apagaria silenciosamente tudo o que o cliente não enviou.
+}

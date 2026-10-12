@@ -1,0 +1,147 @@
+2026-10-11 16:50:21,919 INFO     src.app | application composed
+ * Serving Flask app 'src.app'
+ * Debug mode: off
+2026-10-11 16:50:21,923 INFO     werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-11 16:50:21,923 INFO     werkzeug | [33mPress CTRL+C to quit[0m
+2026-10-11 16:50:21,923 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:21] "GET /health HTTP/1.1" 200 -
+2026-10-11 16:50:22,007 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET / HTTP/1.1" 200 -
+2026-10-11 16:50:22,008 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /health HTTP/1.1" 200 -
+2026-10-11 16:50:22,013 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks HTTP/1.1" 200 -
+2026-10-11 16:50:22,014 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/1 HTTP/1.1" 200 -
+2026-10-11 16:50:22,015 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,017 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/search?q=bug HTTP/1.1" 200 -
+2026-10-11 16:50:22,017 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/search?status=pending HTTP/1.1" 200 -
+2026-10-11 16:50:22,018 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/search?priority=1 HTTP/1.1" 200 -
+2026-10-11 16:50:22,020 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/search?user_id=1 HTTP/1.1" 200 -
+2026-10-11 16:50:22,021 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/search HTTP/1.1" 200 -
+2026-10-11 16:50:22,023 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/stats HTTP/1.1" 200 -
+2026-10-11 16:50:22,025 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /users HTTP/1.1" 200 -
+2026-10-11 16:50:22,026 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /users/1 HTTP/1.1" 200 -
+2026-10-11 16:50:22,027 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /users/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,028 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /users/1/tasks HTTP/1.1" 200 -
+2026-10-11 16:50:22,029 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /users/9999/tasks HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,031 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /categories HTTP/1.1" 200 -
+2026-10-11 16:50:22,035 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /reports/summary HTTP/1.1" 200 -
+2026-10-11 16:50:22,036 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /reports/user/1 HTTP/1.1" 200 -
+2026-10-11 16:50:22,037 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /reports/user/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,038 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "POST /login HTTP/1.1" 200 -
+2026-10-11 16:50:22,039 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 16:50:22,039 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2026-10-11 16:50:22,040 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,041 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,041 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,042 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,043 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,043 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,044 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,045 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mPOST /tasks HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,046 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mPOST /tasks HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,048 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,048 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /tasks HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,049 ERROR    src.app | Exception on /tasks [POST]
+Traceback (most recent call last):
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/src/controllers/task_controller.py", line 117, in create_task
+    if priority < 1 or priority > 5:
+       ^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'str' and 'int'
+2026-10-11 16:50:22,050 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /tasks HTTP/1.1[0m" 500 -
+2026-10-11 16:50:22,051 ERROR    src.app | Exception on /tasks/search [GET]
+Traceback (most recent call last):
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/src/controllers/task_controller.py", line 265, in search_tasks
+    tasks = tasks.filter(Task.priority == int(priority))
+                                          ~~~^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'abc'
+2026-10-11 16:50:22,051 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mGET /tasks/search?priority=abc HTTP/1.1[0m" 500 -
+2026-10-11 16:50:22,052 ERROR    src.app | Exception on /tasks/search [GET]
+Traceback (most recent call last):
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/.venv/lib/python3.14/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/pedroazeredo/Documents/Repos/MBA/desafios/mba-ia-refactor-projects-skill/task-manager-api/src/controllers/task_controller.py", line 268, in search_tasks
+    tasks = tasks.filter(Task.user_id == int(user_id))
+                                         ~~~^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'abc'
+2026-10-11 16:50:22,052 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mGET /tasks/search?user_id=abc HTTP/1.1[0m" 500 -
+2026-10-11 16:50:22,052 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,053 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,053 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,054 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,055 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,056 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 409 -
+2026-10-11 16:50:22,056 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /users HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,057 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /categories HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,058 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mPUT /categories/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,058 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mDELETE /categories/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,059 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mPUT /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,060 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mDELETE /tasks/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,060 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mPUT /users/9999 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,061 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mDELETE /users/9999 HTTP/1.1[0m" 404 -
+Task criada: 11 - Baseline task
+2026-10-11 16:50:22,063 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-11 16:50:22,064 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/11 HTTP/1.1" 200 -
+Task atualizada: 11
+2026-10-11 16:50:22,065 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "PUT /tasks/11 HTTP/1.1" 200 -
+2026-10-11 16:50:22,066 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPUT /tasks/11 HTTP/1.1[0m" 400 -
+Task atualizada: 11
+2026-10-11 16:50:22,067 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "PUT /tasks/11 HTTP/1.1" 200 -
+Task deletada: 11
+2026-10-11 16:50:22,069 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "DELETE /tasks/11 HTTP/1.1" 200 -
+2026-10-11 16:50:22,069 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /tasks/11 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,071 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /categories HTTP/1.1[0m" 201 -
+2026-10-11 16:50:22,072 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "PUT /categories/5 HTTP/1.1" 200 -
+Task criada: 11 - Task that will be orphaned
+2026-10-11 16:50:22,074 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+2026-10-11 16:50:22,076 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "DELETE /categories/5 HTTP/1.1" 200 -
+2026-10-11 16:50:22,076 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/11 HTTP/1.1" 200 -
+Task deletada: 11
+2026-10-11 16:50:22,078 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "DELETE /tasks/11 HTTP/1.1" 200 -
+Usuário criado: 4 - Baseline User
+2026-10-11 16:50:22,079 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /users HTTP/1.1[0m" 201 -
+2026-10-11 16:50:22,080 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /users/4 HTTP/1.1" 200 -
+2026-10-11 16:50:22,081 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "PUT /users/4 HTTP/1.1" 200 -
+2026-10-11 16:50:22,082 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPUT /users/4 HTTP/1.1[0m" 400 -
+2026-10-11 16:50:22,083 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPUT /users/4 HTTP/1.1[0m" 409 -
+2026-10-11 16:50:22,083 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[31m[1mPOST /login HTTP/1.1[0m" 403 -
+Task criada: 11 - Task owned by baseline user
+2026-10-11 16:50:22,084 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[35m[1mPOST /tasks HTTP/1.1[0m" 201 -
+Usuário deletado: 4
+2026-10-11 16:50:22,086 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "DELETE /users/4 HTTP/1.1" 200 -
+2026-10-11 16:50:22,086 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "[33mGET /users/4 HTTP/1.1[0m" 404 -
+2026-10-11 16:50:22,088 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks HTTP/1.1" 200 -
+2026-10-11 16:50:22,089 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /users HTTP/1.1" 200 -
+2026-10-11 16:50:22,091 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /categories HTTP/1.1" 200 -
+2026-10-11 16:50:22,092 INFO     werkzeug | 127.0.0.1 - - [11/Oct/2026 16:50:22] "GET /tasks/stats HTTP/1.1" 200 -

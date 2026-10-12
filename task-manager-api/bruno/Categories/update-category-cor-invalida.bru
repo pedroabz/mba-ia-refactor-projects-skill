@@ -1,0 +1,39 @@
+meta {
+  name: Atualizar com cor invalida (400)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/categories/{{createdCategoryId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "color": "vermelho"
+  }
+}
+
+tests {
+  test("responde 400", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().error).to.include("Cor inválida");
+  });
+}
+
+docs {
+  Nenhuma das rotas validava o formato da cor, apesar de existir um
+  `is_valid_color()` no módulo de helpers — que nunca era chamado, e que além
+  disso só verificava o comprimento e o `#` inicial. A versão actual confirma
+  que os dígitos são hexadecimais.
+}

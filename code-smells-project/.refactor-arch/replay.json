@@ -1,0 +1,1120 @@
+[
+  {
+    "body_atual": {
+      "endpoints": {
+        "health": "/health",
+        "login": "/login",
+        "pedidos": "/pedidos",
+        "produtos": "/produtos",
+        "relatorios": "/relatorios/vendas",
+        "usuarios": "/usuarios"
+      },
+      "mensagem": "Bem-vindo à API da Loja",
+      "versao": "1.0.0"
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "counts": {
+        "pedidos": 0,
+        "produtos": 10,
+        "usuarios": 3
+      },
+      "database": "connected",
+      "status": "ok",
+      "versao": "1.0.0"
+    },
+    "diferencas": [
+      "- ambiente = \"producao\"",
+      "- db_path = \"loja.db\"",
+      "- debug = true",
+      "- secret_key = \"minha-chave-super-secreta-123\""
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/health",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Notebook potente para jogos",
+          "estoque": 10,
+          "id": 1,
+          "nome": "Notebook Gamer",
+          "preco": 5999.99
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Mouse sem fio ergonômico",
+          "estoque": 50,
+          "id": 2,
+          "nome": "Mouse Wireless",
+          "preco": 89.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Teclado mecânico RGB",
+          "estoque": 30,
+          "id": 3,
+          "nome": "Teclado Mecânico",
+          "preco": 299.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Monitor 27 polegadas 144hz",
+          "estoque": 15,
+          "id": 4,
+          "nome": "Monitor 27''",
+          "preco": 1899.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Headset com microfone",
+          "estoque": 25,
+          "id": 5,
+          "nome": "Headset Gamer",
+          "preco": 199.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "moveis",
+          "criado_em": "<TS>",
+          "descricao": "Cadeira ergonômica",
+          "estoque": 8,
+          "id": 6,
+          "nome": "Cadeira Gamer",
+          "preco": 1299.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Webcam 1080p",
+          "estoque": 20,
+          "id": 7,
+          "nome": "Webcam HD",
+          "preco": 249.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Hub USB 3.0 7 portas",
+          "estoque": 40,
+          "id": 8,
+          "nome": "Hub USB",
+          "preco": 79.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "SSD NVMe 1TB",
+          "estoque": 35,
+          "id": 9,
+          "nome": "SSD 1TB",
+          "preco": 449.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "vestuario",
+          "criado_em": "<TS>",
+          "descricao": "Camiseta estampa código",
+          "estoque": 100,
+          "id": 10,
+          "nome": "Camiseta Dev",
+          "preco": 59.9
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 10
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 10"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/produtos",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "ativo": 1,
+        "categoria": "informatica",
+        "criado_em": "<TS>",
+        "descricao": "Notebook potente para jogos",
+        "estoque": 10,
+        "id": 1,
+        "nome": "Notebook Gamer",
+        "preco": 5999.99
+      },
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/produtos/1",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Produto não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/produtos/9999",
+    "status_atual": 404,
+    "status_baseline": 404
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Mouse sem fio ergonômico",
+          "estoque": 50,
+          "id": 2,
+          "nome": "Mouse Wireless",
+          "preco": 89.9
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 1
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/produtos/busca?q=mouse",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Teclado mecânico RGB",
+          "estoque": 30,
+          "id": 3,
+          "nome": "Teclado Mecânico",
+          "preco": 299.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Headset com microfone",
+          "estoque": 25,
+          "id": 5,
+          "nome": "Headset Gamer",
+          "preco": 199.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Webcam 1080p",
+          "estoque": 20,
+          "id": 7,
+          "nome": "Webcam HD",
+          "preco": 249.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "SSD NVMe 1TB",
+          "estoque": 35,
+          "id": 9,
+          "nome": "SSD 1TB",
+          "preco": 449.9
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 4
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=1000",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Notebook potente para jogos",
+          "estoque": 10,
+          "id": 1,
+          "nome": "Notebook Gamer",
+          "preco": 5999.99
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Mouse sem fio ergonômico",
+          "estoque": 50,
+          "id": 2,
+          "nome": "Mouse Wireless",
+          "preco": 89.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Teclado mecânico RGB",
+          "estoque": 30,
+          "id": 3,
+          "nome": "Teclado Mecânico",
+          "preco": 299.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Monitor 27 polegadas 144hz",
+          "estoque": 15,
+          "id": 4,
+          "nome": "Monitor 27''",
+          "preco": 1899.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Headset com microfone",
+          "estoque": 25,
+          "id": 5,
+          "nome": "Headset Gamer",
+          "preco": 199.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "moveis",
+          "criado_em": "<TS>",
+          "descricao": "Cadeira ergonômica",
+          "estoque": 8,
+          "id": 6,
+          "nome": "Cadeira Gamer",
+          "preco": 1299.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Webcam 1080p",
+          "estoque": 20,
+          "id": 7,
+          "nome": "Webcam HD",
+          "preco": 249.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "Hub USB 3.0 7 portas",
+          "estoque": 40,
+          "id": 8,
+          "nome": "Hub USB",
+          "preco": 79.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "informatica",
+          "criado_em": "<TS>",
+          "descricao": "SSD NVMe 1TB",
+          "estoque": 35,
+          "id": 9,
+          "nome": "SSD 1TB",
+          "preco": 449.9
+        },
+        {
+          "ativo": 1,
+          "categoria": "vestuario",
+          "criado_em": "<TS>",
+          "descricao": "Camiseta estampa código",
+          "estoque": 100,
+          "id": 10,
+          "nome": "Camiseta Dev",
+          "preco": 59.9
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 10
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/produtos/busca?q=",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "criado_em": "<TS>",
+          "email": "admin@loja.com",
+          "id": 1,
+          "nome": "Admin",
+          "tipo": "admin"
+        },
+        {
+          "criado_em": "<TS>",
+          "email": "joao@email.com",
+          "id": 2,
+          "nome": "João Silva",
+          "tipo": "cliente"
+        },
+        {
+          "criado_em": "<TS>",
+          "email": "maria@email.com",
+          "id": 3,
+          "nome": "Maria Santos",
+          "tipo": "cliente"
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 3
+    },
+    "diferencas": [
+      "- dados[0].senha = \"admin123\"",
+      "- dados[1].senha = \"123456\"",
+      "- dados[2].senha = \"senha123\"",
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 3"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/usuarios",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "criado_em": "<TS>",
+        "email": "joao@email.com",
+        "id": 2,
+        "nome": "João Silva",
+        "tipo": "cliente"
+      },
+      "sucesso": true
+    },
+    "diferencas": [
+      "- dados.senha = \"123456\""
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/usuarios/2",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Usuário não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/usuarios/9999",
+    "status_atual": 404,
+    "status_baseline": 404
+  },
+  {
+    "body_atual": {
+      "dados": [],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 0
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 0"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/pedidos",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 0
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 0"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/pedidos/usuario/2",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "desconto_aplicavel": 0,
+        "faturamento_bruto": 0,
+        "faturamento_liquido": 0,
+        "pedidos_aprovados": 0,
+        "pedidos_cancelados": 0,
+        "pedidos_pendentes": 0,
+        "ticket_medio": 0,
+        "total_pedidos": 0
+      },
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/relatorios/vendas",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "email": "joao@email.com",
+        "id": 2,
+        "nome": "João Silva",
+        "tipo": "cliente"
+      },
+      "mensagem": "Login OK",
+      "sucesso": true,
+      "token": "eyJpZCI6MiwidGlwbyI6ImNsaWVudGUifQ.asuo_Q.9eBBmGB8iGXtQvbjB0F18BjY9gM"
+    },
+    "diferencas": [
+      "+ token = \"eyJpZCI6MiwidGlwbyI6ImNsaWVudGUifQ.asuo_Q.9eBBmGB8iGXtQvbjB0F18BjY9gM\""
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/login",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Email ou senha inválidos",
+      "sucesso": false
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/login",
+    "status_atual": 401,
+    "status_baseline": 401
+  },
+  {
+    "body_atual": {
+      "erro": "Email e senha são obrigatórios",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/login",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "id": 11
+      },
+      "mensagem": "Produto criado",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 201,
+    "status_baseline": 201
+  },
+  {
+    "body_atual": {
+      "erro": "Nome é obrigatório",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Preço é obrigatório",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Preço não pode ser negativo",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Nome muito curto",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Categoria inválida. Válidas: ['informatica', 'moveis', 'vestuario', 'geral', 'eletronicos', 'livros']",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/produtos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "mensagem": "Produto atualizado",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "PUT",
+    "path": "/produtos/11",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Produto não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "PUT",
+    "path": "/produtos/9999",
+    "status_atual": 404,
+    "status_baseline": 404
+  },
+  {
+    "body_atual": {
+      "erro": "Nome muito curto",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ erro = \"Nome muito curto\"",
+      "- mensagem = \"Produto atualizado\"",
+      "~ sucesso: true -> false"
+    ],
+    "igual": false,
+    "method": "PUT",
+    "path": "/produtos/11",
+    "status_atual": 400,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "ativo": 1,
+        "categoria": "livros",
+        "criado_em": "<TS>",
+        "descricao": "nova desc",
+        "estoque": 9,
+        "id": 11,
+        "nome": "Produto Teste Editado",
+        "preco": 12.5
+      },
+      "sucesso": true
+    },
+    "diferencas": [
+      "~ dados.categoria: \"inexistente\" -> \"livros\"",
+      "~ dados.descricao: \"\" -> \"nova desc\"",
+      "~ dados.estoque: 1 -> 9",
+      "~ dados.nome: \"Y\" -> \"Produto Teste Editado\"",
+      "~ dados.preco: 1.0 -> 12.5"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/produtos/11",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "id": 4
+      },
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/usuarios",
+    "status_atual": 201,
+    "status_baseline": 201
+  },
+  {
+    "body_atual": {
+      "erro": "Nome, email e senha são obrigatórios",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/usuarios",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "pedido_id": 1,
+        "total": 479.7
+      },
+      "mensagem": "Pedido criado com sucesso",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/pedidos",
+    "status_atual": 201,
+    "status_baseline": 201
+  },
+  {
+    "body_atual": {
+      "erro": "Pedido deve ter pelo menos 1 item",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/pedidos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Usuario ID é obrigatório",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/pedidos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Produto 9999 não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/pedidos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Estoque insuficiente para Cadeira Gamer",
+      "sucesso": false
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/pedidos",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "criado_em": "<TS>",
+          "id": 1,
+          "itens": [
+            {
+              "preco_unitario": 89.9,
+              "produto_id": 2,
+              "produto_nome": "Mouse Wireless",
+              "quantidade": 2
+            },
+            {
+              "preco_unitario": 299.9,
+              "produto_id": 3,
+              "produto_nome": "Teclado Mecânico",
+              "quantidade": 1
+            }
+          ],
+          "status": "pendente",
+          "total": 479.7,
+          "usuario_id": 2
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 1
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 1"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/pedidos",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": [
+        {
+          "criado_em": "<TS>",
+          "id": 1,
+          "itens": [
+            {
+              "preco_unitario": 89.9,
+              "produto_id": 2,
+              "produto_nome": "Mouse Wireless",
+              "quantidade": 2
+            },
+            {
+              "preco_unitario": 299.9,
+              "produto_id": 3,
+              "produto_nome": "Teclado Mecânico",
+              "quantidade": 1
+            }
+          ],
+          "status": "pendente",
+          "total": 479.7,
+          "usuario_id": 2
+        }
+      ],
+      "limit": 50,
+      "offset": 0,
+      "sucesso": true,
+      "total": 1
+    },
+    "diferencas": [
+      "+ limit = 50",
+      "+ offset = 0",
+      "+ total = 1"
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/pedidos/usuario/2",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "mensagem": "Status atualizado",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "PUT",
+    "path": "/pedidos/1/status",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Status inválido",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "PUT",
+    "path": "/pedidos/1/status",
+    "status_atual": 400,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "erro": "Pedido não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ erro = \"Pedido não encontrado\"",
+      "- mensagem = \"Status atualizado\"",
+      "~ sucesso: true -> false"
+    ],
+    "igual": false,
+    "method": "PUT",
+    "path": "/pedidos/999999/status",
+    "status_atual": 404,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "desconto_aplicavel": 0,
+        "faturamento_bruto": 479.7,
+        "faturamento_liquido": 479.7,
+        "pedidos_aprovados": 1,
+        "pedidos_cancelados": 0,
+        "pedidos_pendentes": 0,
+        "ticket_medio": 479.7,
+        "total_pedidos": 1
+      },
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/relatorios/vendas",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "dados": {
+        "ativo": 1,
+        "categoria": "informatica",
+        "criado_em": "<TS>",
+        "descricao": "Mouse sem fio ergonômico",
+        "estoque": 48,
+        "id": 2,
+        "nome": "Mouse Wireless",
+        "preco": 89.9
+      },
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "GET",
+    "path": "/produtos/2",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "mensagem": "Produto deletado",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "DELETE",
+    "path": "/produtos/11",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Produto não encontrado",
+      "sucesso": false
+    },
+    "diferencas": [
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "DELETE",
+    "path": "/produtos/9999",
+    "status_atual": 404,
+    "status_baseline": 404
+  },
+  {
+    "body_atual": {
+      "counts": {
+        "pedidos": 1,
+        "produtos": 10,
+        "usuarios": 4
+      },
+      "database": "connected",
+      "status": "ok",
+      "versao": "1.0.0"
+    },
+    "diferencas": [
+      "- ambiente = \"producao\"",
+      "- db_path = \"loja.db\"",
+      "- debug = true",
+      "- secret_key = \"minha-chave-super-secreta-123\""
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/health",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Rota não encontrada",
+      "sucesso": false
+    },
+    "diferencas": [
+      "- dados = [{\"n\": 10}]",
+      "+ erro = \"Rota não encontrada\"",
+      "~ sucesso: true -> false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/admin/query",
+    "status_atual": 404,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "erro": "Rota não encontrada",
+      "sucesso": false
+    },
+    "diferencas": [
+      "~ erro: \"Query não informada\" -> \"Rota não encontrada\"",
+      "+ sucesso = false"
+    ],
+    "igual": false,
+    "method": "POST",
+    "path": "/admin/query",
+    "status_atual": 404,
+    "status_baseline": 400
+  },
+  {
+    "body_atual": {
+      "mensagem": "Banco de dados resetado",
+      "sucesso": true
+    },
+    "diferencas": [],
+    "igual": true,
+    "method": "POST",
+    "path": "/admin/reset-db",
+    "status_atual": 200,
+    "status_baseline": 200
+  },
+  {
+    "body_atual": {
+      "counts": {
+        "pedidos": 0,
+        "produtos": 0,
+        "usuarios": 0
+      },
+      "database": "connected",
+      "status": "ok",
+      "versao": "1.0.0"
+    },
+    "diferencas": [
+      "- ambiente = \"producao\"",
+      "- db_path = \"loja.db\"",
+      "- debug = true",
+      "- secret_key = \"minha-chave-super-secreta-123\""
+    ],
+    "igual": false,
+    "method": "GET",
+    "path": "/health",
+    "status_atual": 200,
+    "status_baseline": 200
+  }
+]

@@ -1,0 +1,36 @@
+meta {
+  name: Listar categories
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/categories
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("cada categoria traz task_count", function () {
+    expect(res.getBody()[0]).to.have.property("task_count");
+  });
+}
+
+docs {
+  Basta estar autenticado (não precisa de privilégio) — é a lista de
+  classificação.
+
+  Deliberadamente **não** paginado: uma tabela de classificação é limitada
+  por natureza, ao contrário de tasks e users. Está anotado no model para que
+  não seja "corrigido" depois.
+
+  `task_count` vem de uma query agrupada, não de um count por linha.
+}

@@ -1,0 +1,45 @@
+meta {
+  name: Auto-promocao a admin (403)
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/users/{{userUserId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "role": "admin"
+  }
+}
+
+tests {
+  test("responde 403", function () {
+    expect(res.getStatus()).to.equal(403);
+  });
+
+  test("explica que alterar role e exclusivo de admin", function () {
+    expect(res.getBody().error).to.include("administradores");
+  });
+}
+
+docs {
+  O caminho de escalada de privilégio mais directo da aplicação original:
+  `PUT /users/<id>` aceitava `role` de qualquer chamador não autenticado, pelo
+  que qualquer pessoa na internet se tornava `admin`.
+
+  Note que o utilizador **é** dono deste recurso (está a editar a própria
+  conta) e mesmo assim não pode alterar `role` — a guarda de posse autoriza a
+  edição, mas o campo `role` tem a sua própria regra.
+}

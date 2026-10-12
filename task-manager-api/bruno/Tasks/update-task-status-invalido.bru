@@ -1,0 +1,42 @@
+meta {
+  name: Atualizar com status invalido (400)
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/tasks/{{createdTaskId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "status": "nao-existe"
+  }
+}
+
+tests {
+  test("responde 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("mantem a mensagem original e acrescenta details por campo", function () {
+    expect(res.getBody().error).to.equal("Status inválido");
+    expect(res.getBody().details).to.have.property("status");
+  });
+}
+
+docs {
+  Mostra a convenção de erro: `{"error": "<mensagem>"}` — a mesma de antes da
+  refatoração — mais um `details` opcional com os erros por campo. Um cliente
+  que lia `.error` continua a funcionar.
+}

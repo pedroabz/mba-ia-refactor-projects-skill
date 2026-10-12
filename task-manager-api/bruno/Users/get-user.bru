@@ -1,0 +1,39 @@
+meta {
+  name: Obter user por id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/{{adminUserId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("o hash da senha NAO vem na resposta", function () {
+    expect(res.getBody()).to.not.have.property("password");
+    expect(JSON.stringify(res.getBody())).to.not.include("scrypt");
+  });
+
+  test("inclui as tasks do utilizador", function () {
+    expect(res.getBody().tasks).to.be.an("array");
+  });
+}
+
+docs {
+  Próprio utilizador ou privilegiado.
+
+  Este era o endpoint mais grave do projeto: devolvia
+  `"password": "81dc9bdb52d04dc20036dbd8313ed055"` — o MD5 de `1234`, presente
+  em qualquer rainbow table — sem exigir autenticação. O teste acima falha se
+  a serialização voltar a incluir o campo.
+}

@@ -1,0 +1,281 @@
+{
+  "project": "ecommerce-api-legacy-new-surface",
+  "base_url": "http://127.0.0.1:3100",
+  "authenticated": [
+    "admin",
+    "student"
+  ],
+  "unordered": [
+    "report-admin-default-paging",
+    "report-limit-clamped"
+  ],
+  "step_count": 17,
+  "observations": [
+    {
+      "id": "crash-path-card-as-number",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "cardNumber": "deve ser uma string"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-declined-valid-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 402,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "payment_declined",
+          "message": "Pagamento recusado"
+        }
+      }
+    },
+    {
+      "id": "checkout-bad-email",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "email": "deve ser um e-mail válido"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-short-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "password": "deve ter no mínimo 8 caracteres"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-course-id-not-a-number",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "courseId": "deve ser um número inteiro"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-canonical-field-names",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "enrollmentId": 2,
+        "courseId": 2,
+        "amount": 497,
+        "status": "PAID"
+      }
+    },
+    {
+      "id": "login-wrong-password",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 401,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "unauthorized",
+          "message": "Credenciais inválidas"
+        }
+      }
+    },
+    {
+      "id": "login-unknown-email",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 401,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "unauthorized",
+          "message": "Credenciais inválidas"
+        }
+      }
+    },
+    {
+      "id": "report-unauthenticated",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 401,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "unauthorized",
+          "message": "Autenticação necessária"
+        }
+      }
+    },
+    {
+      "id": "report-as-student",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 403,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "forbidden",
+          "message": "Acesso negado"
+        }
+      }
+    },
+    {
+      "id": "report-admin-default-paging",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 997,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 497,
+          "students": [
+            {
+              "student": "Nomes Canonicos",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "report-limit-clamped",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=99999&offset=0",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 997,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 497,
+          "students": [
+            {
+              "student": "Nomes Canonicos",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "report-second-page-empty",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=1&offset=50",
+      "status": 200,
+      "content_type": "application/json",
+      "body": []
+    },
+    {
+      "id": "report-bad-limit",
+      "method": "GET",
+      "path": "/api/admin/financial-report?limit=abc",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "limit": "deve ser um número inteiro"
+          }
+        }
+      }
+    },
+    {
+      "id": "delete-unauthenticated",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "status": 401,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "unauthorized",
+          "message": "Autenticação necessária"
+        }
+      }
+    },
+    {
+      "id": "delete-as-student",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "status": 403,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "forbidden",
+          "message": "Acesso negado"
+        }
+      }
+    },
+    {
+      "id": "delete-bad-id",
+      "method": "DELETE",
+      "path": "/api/users/abc",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "id": "deve ser um número inteiro"
+          }
+        }
+      }
+    }
+  ]
+}

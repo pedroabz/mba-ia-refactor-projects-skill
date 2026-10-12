@@ -1,0 +1,25 @@
+meta {
+  name: Indice da API
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("lista os endpoints", function() {
+    expect(res.body.endpoints).to.be.an("object");
+  });
+}
+
+docs {
+  Rota publica. Mapa dos endpoints e versao da API.
+}

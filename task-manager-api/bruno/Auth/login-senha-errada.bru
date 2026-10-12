@@ -1,0 +1,41 @@
+meta {
+  name: Login senha errada (401)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{adminEmail}}",
+    "password": "senha-errada"
+  }
+}
+
+tests {
+  test("responde 401", function () {
+    expect(res.getStatus()).to.equal(401);
+  });
+
+  test("a mensagem nao revela se o email existe", function () {
+    expect(res.getBody().error).to.equal("Credenciais inválidas");
+  });
+}
+
+docs {
+  Email inexistente e senha errada devolvem exatamente a mesma mensagem, para
+  o endpoint não servir como enumerador de contas registadas.
+
+  Cuidado: `/login` tem rate limit (`LOGIN_RATE_LIMIT`, 10/min por omissão).
+  Repetir este request em sequência acaba em **429** — que é o comportamento
+  correto, não uma falha da coleção.
+}

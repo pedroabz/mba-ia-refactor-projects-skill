@@ -1,0 +1,25 @@
+meta {
+  name: Buscar por id (admin)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/usuarios/2
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Exige token de admin.
+}

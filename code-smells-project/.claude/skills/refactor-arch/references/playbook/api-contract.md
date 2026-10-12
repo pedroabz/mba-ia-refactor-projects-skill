@@ -2,6 +2,14 @@
 
 T-14 to T-18. Apply after the structure is stable: these all assume a controller layer exists.
 
+**The key names and message text in these examples are placeholders.** They read `error`,
+`details`, `invalid request` because this file is written in English. In a project whose
+contract uses `erro`, `dados` and `sucesso`, those are the names to keep — see "Never
+translate the application" in `refactoring-playbook.md`. Every transformation here is about
+*where* the response is produced and whether its shape is consistent; none of them is about
+renaming fields or rewriting messages. Renaming a response key breaks every client, and the
+baseline replay will correctly report it as a regression.
+
 ---
 
 ## T-14 — Centralize error handling
@@ -191,8 +199,10 @@ res.status(400).json({ error: 'invalid request', details: { card: 'required' } }
 
 **Steps**
 
-1. Pick one convention and apply it everywhere: errors always `{error, details?}`, success
-   always the resource or a collection. Record the convention in the project README.
+1. Adopt the convention the project already uses in most of its handlers, and apply it to the
+   rest — do not invent a new one. If the majority of responses are `{"dados": …,
+   "sucesso": true}` with `{"erro": …}` on failure, that is the convention: the fix is making
+   the outliers match, keeping those key names. Record it in the project README.
 2. Never return plain text where JSON is the contract.
 3. Fix status codes that misreport the outcome: 404 for missing, 201 for created, 204 for
    deleted, 409 for conflict, 400 for client validation failure, 401/403 for auth. Verify the

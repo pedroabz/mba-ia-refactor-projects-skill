@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "name": "ecommerce-api-legacy",
+  "type": "collection",
+  "defaultEnvironment": "Local",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

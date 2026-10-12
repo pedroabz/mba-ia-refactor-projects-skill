@@ -1,0 +1,48 @@
+meta {
+  name: Checkout with deprecated field names
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "usr": "Leonan",
+    "eml": "{{studentEmail}}",
+    "pwd": "senhaforte",
+    "c_id": 1,
+    "card": "{{approvedCard}}"
+  }
+}
+
+tests {
+  test("201 — os nomes abreviados continuam aceitos", function() {
+    expect(res.status).to.equal(201);
+    expect(res.body.courseId).to.equal(1);
+    expect(res.body.amount).to.equal(997);
+  });
+}
+
+docs {
+  As abreviações originais (`usr`, `eml`, `pwd`, `c_id`, `card`) seguem funcionando
+  como **aliases depreciados**: quebrar o contrato de request inteiro por um ganho
+  de legibilidade quebraria todo cliente existente (QUA-04).
+
+  O uso é registrado no log do servidor:
+
+  ```json
+  {"level":"warn","msg":"request used deprecated field names","fields":["usr","eml","pwd","c_id","card"]}
+  ```
+
+  Este e-mail já existe nos seeds, então o checkout reaproveita a conta em vez de
+  duplicá-la — veja `userCreated:false` na linha `checkout completed` do log.
+}

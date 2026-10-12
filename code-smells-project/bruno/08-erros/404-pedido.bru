@@ -1,0 +1,31 @@
+meta {
+  name: 404 pedido inexistente
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/pedidos/999999/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "status": "aprovado"
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+}
+
+docs {
+  Antes respondia 200 para uma escrita que nao aconteceu (API-05).
+}

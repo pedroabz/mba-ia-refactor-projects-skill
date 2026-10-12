@@ -1,0 +1,45 @@
+meta {
+  name: Checkout card as number - former crash
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "usr": "Tipo Errado",
+    "eml": "tipo-errado@teste.com",
+    "pwd": "senhaforte",
+    "c_id": 1,
+    "card": 4111222233334444
+  }
+}
+
+tests {
+  test("400 — e o processo continua no ar", function() {
+    expect(res.status).to.equal(400);
+    expect(res.body.error.details.cardNumber).to.equal("deve ser uma string");
+  });
+}
+
+docs {
+  **O achado mais grave desta API, e o mais fácil de disparar.** Note que `card` está
+  sem aspas: é um número JSON, não string — um erro trivial de cliente.
+
+  Antes da refatoração esse valor chegava a `cc.startsWith("4")` dentro de um callback
+  do driver sqlite3. O `TypeError` resultante ficava **fora do alcance do Express**,
+  subia como `uncaughtException` e **encerrava o processo**: um único POST anônimo
+  derrubava a aplicação para todos os clientes simultâneos (API-03).
+
+  Depois desta request, rode qualquer outra — `Admin / Financial report`, por exemplo.
+  A aplicação responde normalmente, que é o ponto inteiro deste caso.
+}

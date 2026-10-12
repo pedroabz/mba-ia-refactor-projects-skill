@@ -1,0 +1,29 @@
+meta {
+  name: Listar todos (admin)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/pedidos
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("itens vem no mesmo payload", function() {
+    expect(res.body.dados).to.be.an("array");
+  });
+}
+
+docs {
+  Exige token de admin. Uma consulta com JOIN traz pedidos e itens — antes eram `1 + pedidos + itens` consultas (DAT-04).
+}

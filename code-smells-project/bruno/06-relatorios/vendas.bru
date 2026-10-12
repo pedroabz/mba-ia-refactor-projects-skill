@@ -1,0 +1,31 @@
+meta {
+  name: Vendas (admin)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/relatorios/vendas
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("campos do relatorio", function() {
+    expect(res.body.dados.faturamento_bruto).to.be.a("number");
+    expect(res.body.dados.desconto_aplicavel).to.be.a("number");
+    expect(res.body.dados.ticket_medio).to.be.a("number");
+  });
+}
+
+docs {
+  Exige token de admin. Faixas de desconto sobre o faturamento: 10% acima de 10000, 5% acima de 5000, 2% acima de 1000.
+}

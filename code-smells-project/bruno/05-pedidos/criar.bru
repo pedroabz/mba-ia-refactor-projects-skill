@@ -1,0 +1,46 @@
+meta {
+  name: Criar
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/pedidos
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "usuario_id": 2,
+    "itens": [
+      { "produto_id": 2, "quantidade": 2 },
+      { "produto_id": 3, "quantidade": 1 }
+    ]
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("pedidoId", res.body.dados.pedido_id);
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("calcula o total e grava pedidoId", function() {
+    expect(res.body.dados.total).to.equal(479.7);
+    expect(res.body.dados.pedido_id).to.be.a("number");
+  });
+}
+
+docs {
+  Exige autenticacao. Um cliente so cria pedido para si mesmo; admin cria para qualquer um.
+  
+  Validacao, estoque e escritas correm em uma transacao: falha no meio nao deixa pedido parcial (DAT-02).
+}

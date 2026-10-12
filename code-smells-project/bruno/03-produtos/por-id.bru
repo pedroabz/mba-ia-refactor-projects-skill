@@ -1,0 +1,26 @@
+meta {
+  name: Buscar por id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/produtos/1
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("campos do produto", function() {
+    expect(res.body.dados.nome).to.be.a("string");
+    expect(res.body.dados.ativo).to.equal(1);
+  });
+}
+
+docs {
+  Rota publica. Produto inexistente ou desativado devolve 404.
+}

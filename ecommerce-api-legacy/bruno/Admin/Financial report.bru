@@ -1,0 +1,51 @@
+meta {
+  name: Financial report
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/admin/financial-report
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+tests {
+  test("200 com a lista de cursos", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.be.an("array");
+    res.body.forEach(function(item) {
+      expect(item).to.have.all.keys("course", "revenue", "students");
+      expect(item.revenue).to.be.a("number");
+      expect(item.students).to.be.an("array");
+    });
+  });
+
+  test("paginação vai nos headers, não no corpo", function() {
+    expect(res.headers["x-total-count"]).to.be.a("string");
+    expect(res.headers["x-page-limit"]).to.equal("50");
+    expect(res.headers["x-page-offset"]).to.equal("0");
+  });
+}
+
+docs {
+  Exige **Login admin** antes (usa `{{adminToken}}`).
+
+  Três coisas mudaram aqui sem alterar a forma do corpo:
+
+  - **Ordem determinística.** A versão anterior coordenava `1 + C + 2E` queries com
+    dois contadores manuais e montava a resposta na ordem em que os callbacks
+    terminavam — duas chamadas idênticas devolviam os cursos em ordens diferentes.
+    Chame esta request cinco vezes: o corpo é byte a byte igual (API-01).
+  - **Contagem de queries constante.** São 5 statements, com 2 cursos ou com 20 mil
+    matrículas (DAT-04).
+  - **Receita somada pelo banco**, com `SUM` em SQL, e portanto independente de
+    quantos alunos a resposta traz (DAT-05).
+
+  O corpo segue sendo o array puro: a paginação foi exposta em headers em vez de
+  envelopar o payload, para não quebrar clientes existentes.
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Delete user without token
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/users/1
+  body: none
+  auth: none
+}
+
+tests {
+  test("401 e nada é removido", function() {
+    expect(res.status).to.equal(401);
+    expect(res.body.error.code).to.equal("unauthorized");
+  });
+}
+
+docs {
+  Um `DELETE` irreversível por id de path, sem nenhuma checagem: era possível apagar
+  a base de usuários com um `curl` anônimo (SEC-05). Rode esta antes de `Delete user`
+  para confirmar que a guarda está no lugar.
+}

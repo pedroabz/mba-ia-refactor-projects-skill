@@ -1,0 +1,26 @@
+{
+  "project": "ecommerce-api-legacy",
+  "notes": [
+    "Contract changes the refactor makes on purpose, written down before the replay so the",
+    "comparison can separate them from regressions. Every entry names the audit finding it",
+    "comes from. A difference not listed here is a regression; a listing for a step that did",
+    "not change is reported too, since it claims a change that never happened.",
+    "Request-side change applying to all five admin steps: they now require a bearer token",
+    "(SEC-05), so the replay spec logs in first. The guard is verified separately by the",
+    "new-surface spec, which calls them unauthenticated and as a non-admin."
+  ],
+  "changes": {
+    "checkout-missing-fields": "API-05/API-03 — plain text \"Bad Request\" replaced by a JSON error envelope with per-field detail, so a client can parse the failure instead of matching a sentence.",
+    "checkout-missing-card": "API-05/API-03 — same envelope; the missing field is now named rather than collapsed into \"Bad Request\".",
+    "checkout-course-not-found": "API-05 — status unchanged (404), body moved from plain text to the JSON error envelope with the stable code course_not_found.",
+    "checkout-declined": "SEC-04/API-03 — the password \"123\" is now rejected at the boundary (minimum 8 characters) before the payment is attempted, so this step returns a validation error instead of the decline. The 402 decline path is exercised by checkout-declined-valid-password in the new-surface spec.",
+    "checkout-new-user": "API-05 — 200 becomes 201 with a Location header for a created enrollment; body keys renamed from {msg, enrollment_id} to {enrollmentId, courseId, amount, status}.",
+    "checkout-existing-user": "API-05 — same 200 to 201 change as checkout-new-user.",
+    "checkout-no-password": "SEC-04 — a checkout with no password is now a 400 instead of silently creating the account with the known default \"123456\".",
+    "report-after-checkouts": "Consequence of the checkout-no-password fix: the rejected checkout no longer creates an enrollment, so Docker holds one enrollment instead of two and its revenue is 497 instead of 994. Clean Architecture is unchanged at 1994, and both figures are consistent with the enrollments that actually succeeded.",
+    "delete-user-existing": "DAT-03/API-05 — 200 with a sentence describing the bug becomes 204. Removal is now an anonymization inside the schema's foreign-key constraints, so enrollments and payments keep a valid parent.",
+    "report-after-delete": "DAT-03 — a removed student now renders as \"Conta removida\" instead of \"Unknown\", because the row survives anonymized rather than vanishing. Clean Architecture revenue stays 1994, which is the accounting fact that matters. The Docker figure differs for the same reason as report-after-checkouts.",
+    "delete-user-missing": "API-05 — deleting an id that does not exist returned 200 and the word \"deletado\"; it now returns 404. The old answer reported a success that never happened.",
+    "unmatched-route": "API-02/API-05 — Express's default HTML error page replaced by the JSON error envelope, so no handler leaks a stack trace or HTML to an API client."
+  }
+}

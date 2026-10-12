@@ -95,12 +95,35 @@ at startup, record that — it is an audit finding, not just a profile fact.
 
 ## 5. Domain
 
-The domain is not decoration in the summary: it calibrates severity for everything that
-follows. Money moving through the system raises the weight of transaction findings.
-Personal data raises exposure findings. A public read-only catalogue lowers access-control
-findings. Without the domain, severity is guesswork.
+The domain is the **business the software serves, not the software itself**. "REST API",
+"web service", "microservice", "CRUD backend" and "Flask application" are implementation
+shapes — nearly every project in scope is one of those, so naming it conveys nothing. The
+domain is what someone would be doing if the software did not exist: selling goods,
+enrolling students, tracking work, scheduling appointments, moving money.
 
-Gather evidence in descending order of authority:
+**Output shape — one line.** Business first, key entities in parentheses, in the code's own
+words:
+
+```
+Domain:  <business domain> (<three or four key entities>)
+```
+
+| | |
+|---|---|
+| Good | `E-commerce (produtos, usuarios, pedidos, itens_pedido)` |
+| Good | `Course enrollment with paid checkout (users, courses, enrollments, payments)` |
+| Good | `Task management with per-user reporting (tasks, users, categories)` |
+| Bad | `REST API of an online store serving product catalogue and order placement` |
+| Bad | `Flask CRUD application over four tables` |
+
+The first bad example leads with the transport and spends its words describing the
+software. The second names a framework and a table count, which the other lines of the
+summary already report.
+
+### Reaching that line
+
+Everything below is **working material, not output.** You read all of it; you print one
+line. Gather evidence in descending order of authority:
 
 1. **Declared intent.** README, manifest description, repository name, OpenAPI title, API
    docs, request examples. Read these first — they are the cheapest and most direct
@@ -118,23 +141,49 @@ Gather evidence in descending order of authority:
    storage client means documents. These reveal purpose that the schema hides.
 5. **The vocabulary of the code itself**, including its natural language.
 
-Then state the domain as a **description of what the system does and for whom**, not as a
-category label:
+### Condensing the evidence into the line
 
-- A description is verifiable against the code; a category is a guess that smuggles in
-  assumptions. "Course enrollment with checkout and payment recording" can be checked.
-  Calling the same project "e-commerce" imports carts, inventory, shipping and catalogues
-  that may not exist, and the reader cannot tell which parts you actually saw.
+- **Say what the business is, then anchor it.** The business phrase should survive on its
+  own — "e-commerce", "course enrollment with paid checkout", "task management with
+  reporting" — and the parenthesised entities anchor it to this specific codebase so a
+  reader can tell you looked rather than guessed.
 - **Keep the codebase's own words, including its language.** Translating `pedidos` to
-  "orders" in the report makes every finding harder to locate in the source.
-- Name the actors where they are visible — a roles table or a role column tells you who the
-  system distinguishes, which directly informs access-control findings.
-- Note the boundaries of what you can see. An API with no frontend in the repo, or a service
-  that assumes an upstream caller, should say so.
+  "orders" makes every later finding harder to locate in the source.
+- **Prefer the specific business phrase over the broad category** where the evidence
+  supports it. "Course enrollment with paid checkout" is better than "e-learning" because it
+  is checkable. But do not pad it into a sentence describing the software's behaviour — that
+  is what produced the first bad example above.
 
-**When the evidence is thin, say so.** "Purpose not declared; entities are X, Y and Z, with
-operations limited to CRUD" is a legitimate result. Inventing a plausible category is how a
-profile becomes wrong in a way nobody catches, because it reads as confident.
+**When the evidence is thin, say so in the same one line.** `Unclear — CRUD only over
+(items, users); no stated purpose` is a legitimate result. Inventing a plausible category is
+how a profile becomes wrong in a way nobody catches, because it reads as confident.
+
+### Keep findings out of the profile
+
+The profile answers *what is this?*. The audit answers *what is wrong with it?*. Those are
+separate phases with separate outputs, and mixing them costs twice: the summary stops being
+reviewable at a glance, and the finding escapes the catalogue's confirmation steps and
+false-positive guards on its way into the report.
+
+So the domain line carries no problems, no severities, no line numbers, no route inventory
+and no notes about what is unenforced or insecure. Noticing while reading the schema that
+passwords are stored as received is valuable — carry it forward into the audit, where it gets
+confirmed and classified properly. Not into this line.
+
+Knowing the domain does change how findings are weighed later: money moving through the
+system raises the weight of transaction-integrity findings, personal data raises exposure
+findings, a public read-only catalogue lowers access-control findings. That is a reason to
+establish the domain carefully. It is not a reason to write severity reasoning into the
+summary — do that weighing during the audit, against the catalogue.
+
+Two specific temptations, both of which belong to the audit:
+
+- **The actors.** Note who the system distinguishes if a roles table or role column makes it
+  visible, and keep it to the names. Whether the distinction is actually enforced anywhere is
+  an access-control finding, not a profile fact.
+- **The interesting operations.** The non-CRUD endpoints are how you *identified* the domain;
+  they are not the domain. An inventory of routes with commentary belongs nowhere in the
+  summary — the file count and the architecture line already describe the surface.
 
 **Guard against pattern-matching on a familiar schema.** Tables named `users` and `orders`
 appear in subscription billing, ticketing, logistics, marketplaces and internal tooling —

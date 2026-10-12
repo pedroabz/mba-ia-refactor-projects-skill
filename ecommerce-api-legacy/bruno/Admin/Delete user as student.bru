@@ -1,0 +1,27 @@
+meta {
+  name: Delete user as student
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/users/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{studentToken}}
+}
+
+tests {
+  test("403 e nada é removido", function() {
+    expect(res.status).to.equal(403);
+    expect(res.body.error.code).to.equal("forbidden");
+  });
+}
+
+docs {
+  Exige **Login student**. Um usuário comum não remove contas, nem a própria por esta
+  rota — ela é administrativa.
+}

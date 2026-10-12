@@ -1,0 +1,39 @@
+meta {
+  name: Financial report paginated
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/admin/financial-report?limit=1&offset=0
+  body: none
+  auth: none
+}
+
+params:query {
+  @description('''Cursos por página. Default 50, máximo 200 imposto pelo servidor.''')
+  limit: 1
+  @description('''Deslocamento. 0 ou mais.''')
+  offset: 0
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+tests {
+  test("limit respeitado, total informado", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.length).to.be.at.most(1);
+    expect(res.headers["x-page-limit"]).to.equal("1");
+  });
+}
+
+docs {
+  `limit` e `offset` são opcionais, com default e máximo impostos pelo servidor.
+
+  Os limites são **assimétricos de propósito**: `limit=99999` é reduzido ao máximo
+  (200) — pedir tudo é um pedido legítimo, que o servidor limita — enquanto
+  `limit=0` é recusado com 400, porque uma página vazia por pedido explícito não
+  significa nada. `limit=abc` também é 400.
+}

@@ -1,0 +1,1 @@
+"""Configuracao lida do ambiente."""

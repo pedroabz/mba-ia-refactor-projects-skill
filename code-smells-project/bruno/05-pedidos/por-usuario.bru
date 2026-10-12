@@ -1,0 +1,25 @@
+meta {
+  name: Listar do usuario
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/pedidos/usuario/2
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Exige autenticacao. Com `clienteToken` do Joao (id 2) funciona; trocar para `/usuario/3` devolve 403.
+}

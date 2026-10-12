@@ -1,0 +1,29 @@
+meta {
+  name: Apagar task
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/tasks/{{createdTaskId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("responde 200 com mensagem", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().message).to.equal("Task deletada com sucesso");
+  });
+}
+
+docs {
+  Mantém 200 + mensagem em vez de 204: a convenção já era consistente nos três
+  endpoints de delete, e mudá-la seria alterar o contrato sem ganho.
+
+  Tem rate limit (`DESTRUCTIVE_RATE_LIMIT`, 60/min por omissão).
+}

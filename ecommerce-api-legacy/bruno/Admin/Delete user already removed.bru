@@ -1,0 +1,32 @@
+meta {
+  name: Delete user already removed
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/users/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminToken}}
+}
+
+tests {
+  test("404 — não é sucesso remover o que não existe", function() {
+    expect(res.status).to.equal(404);
+    expect(res.body.error.code).to.equal("user_not_found");
+  });
+}
+
+docs {
+  Rode **depois** de `Delete user`. Vale também para um id que nunca existiu
+  (`/api/users/9999`).
+
+  A versão anterior respondia `200 "Usuário deletado"` nos dois casos — e também
+  quando o próprio `DELETE` falhava, porque o `err` do callback era ignorado. O
+  cliente concluía que a operação tinha acontecido quando não havia acontecido
+  (API-02, API-05).
+}

@@ -1,0 +1,45 @@
+meta {
+  name: Login (user, sem privilegio)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{userEmail}}",
+    "password": "{{userPassword}}"
+  }
+}
+
+script:post-response {
+  // Grava apenas {{userToken}}: nao sobrescreve {{token}}, para nao
+  // perder a sessao de admin ao testar as guardas de papel.
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("userToken", res.getBody().token);
+  }
+}
+
+tests {
+  test("responde 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("o papel e 'user'", function () {
+    expect(res.getBody().user.role).to.equal("user");
+  });
+}
+
+docs {
+  Usuário sem privilégio (`role: user`). Usado pelos requests `(403)` para
+  provar que as guardas de papel e de posse recusam de facto.
+}

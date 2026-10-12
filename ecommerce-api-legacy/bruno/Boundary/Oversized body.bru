@@ -1,0 +1,43 @@
+meta {
+  name: Oversized body
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/checkout
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+script:pre-request {
+  // 150 kB contra um limite de 100 kB. Gerado aqui para não versionar um arquivo
+  // grande só para disparar um 413.
+  req.setBody({ name: "x".repeat(150000) });
+}
+
+body:json {
+  {
+    "name": "substituído pelo script pre-request"
+  }
+}
+
+tests {
+  test("413 payload_too_large", function() {
+    expect(res.status).to.equal(413);
+    expect(res.body.error.code).to.equal("payload_too_large");
+  });
+}
+
+docs {
+  O limite de corpo é 100 kB (`HTTP_BODY_LIMIT`). O corpo de 150 kB é montado no
+  script pre-request.
+
+  Vale notar que o limite em si **não** era um achado: `express.json()` já aplica 100
+  kB por padrão, e isso foi verificado antes de reportar. O achado era a tradução
+  desse erro — ele chegava ao cliente como `500 internal_error` em vez de 413.
+}

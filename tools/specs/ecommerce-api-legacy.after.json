@@ -1,0 +1,140 @@
+{
+  "project": "ecommerce-api-legacy",
+  "notes": [
+    "Replay spec for the refactored application. Same step ids and same request bodies as",
+    "ecommerce-api-legacy.json, so `compare` lines the two up by id and every difference is",
+    "either a regression or a declared contract change.",
+    "The only request-side difference: the two admin routes now require a bearer token, so",
+    "this spec logs in first and marks those steps `auth: true`. That is itself one of the",
+    "declared changes (SEC-05: all three routes used to be anonymous)."
+  ],
+  "unordered": [
+    "report-seeded",
+    "report-after-checkouts",
+    "report-after-delete"
+  ],
+  "auth": {
+    "path": "/api/auth/login",
+    "method": "POST",
+    "body": {
+      "email": "admin@fullcycle.com.br",
+      "password": "dev-admin-password"
+    },
+    "token_path": [
+      "token"
+    ]
+  },
+  "steps": [
+    {
+      "id": "report-seeded",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "auth": true
+    },
+    {
+      "id": "checkout-missing-fields",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {}
+    },
+    {
+      "id": "checkout-missing-card",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Sem Cartao",
+        "eml": "sem-cartao@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 1
+      }
+    },
+    {
+      "id": "checkout-course-not-found",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Curso Inexistente",
+        "eml": "curso-inexistente@teste.com",
+        "pwd": "senhaforte",
+        "c_id": 999,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-declined",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "João",
+        "eml": "joao@teste.com",
+        "pwd": "123",
+        "c_id": 1,
+        "card": "5111222233334444"
+      }
+    },
+    {
+      "id": "checkout-new-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Guilherme",
+        "eml": "gui@fullcycle.com.br",
+        "pwd": "senhaforte",
+        "c_id": 2,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "checkout-existing-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Leonan",
+        "eml": "leonan@fullcycle.com.br",
+        "pwd": "senhaforte",
+        "c_id": 1,
+        "card": "4222333344445555"
+      }
+    },
+    {
+      "id": "checkout-no-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "body": {
+        "usr": "Sem Senha",
+        "eml": "sem-senha@teste.com",
+        "c_id": 2,
+        "card": "4111222233334444"
+      }
+    },
+    {
+      "id": "report-after-checkouts",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "auth": true
+    },
+    {
+      "id": "delete-user-existing",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "auth": true
+    },
+    {
+      "id": "report-after-delete",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "auth": true
+    },
+    {
+      "id": "delete-user-missing",
+      "method": "DELETE",
+      "path": "/api/users/9999",
+      "auth": true
+    },
+    {
+      "id": "unmatched-route",
+      "method": "GET",
+      "path": "/api/nope"
+    }
+  ]
+}

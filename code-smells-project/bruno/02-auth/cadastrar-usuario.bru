@@ -1,0 +1,29 @@
+meta {
+  name: Cadastrar usuario
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/usuarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Novo Cliente",
+    "email": "novo@email.com",
+    "senha": "segredo123"
+  }
+}
+
+tests {
+  test("201 na primeira vez, 409 nas seguintes", function() {
+    expect([201, 409]).to.include(res.getStatus());
+  });
+}
+
+docs {
+  Rota publica. Email duplicado devolve 409, senha com menos de 6 caracteres devolve 400.
+}

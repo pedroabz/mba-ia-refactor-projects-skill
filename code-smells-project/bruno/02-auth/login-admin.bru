@@ -1,0 +1,40 @@
+meta {
+  name: Login (admin)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@loja.com",
+    "senha": "admin123"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("adminToken", res.body.token);
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("devolve token", function() {
+    expect(res.body.token).to.be.a("string");
+  });
+  
+  test("nao devolve senha", function() {
+    expect(res.body.dados.senha).to.be.undefined;
+  });
+}
+
+docs {
+  Rode primeiro: grava `adminToken` no ambiente. Token vale 1 hora.
+}

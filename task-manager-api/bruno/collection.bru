@@ -1,0 +1,61 @@
+headers {
+  Accept: application/json
+}
+
+auth {
+  mode: none
+}
+
+docs {
+  # task-manager-api
+
+  Coleção de todos os endpoints da API.
+
+  ## Antes de começar
+
+  ```bash
+  cd task-manager-api
+  python seed.py      # aplica as migrations e popula o banco
+  python wsgi.py      # sobe em http://127.0.0.1:5000
+  ```
+
+  ### Se a porta 5000 estiver ocupada
+
+  No macOS o *AirPlay Receiver* ocupa a 5000, e os outros projetos do desafio
+  também usam essa porta. Se `python wsgi.py` falhar com
+  `Address already in use`, suba noutra porta e troque de ambiente:
+
+  ```bash
+  PORT=5100 python wsgi.py
+  ```
+
+  Depois selecione o ambiente **local-porta-alternativa** (5100) em vez de
+  **local** (5000). Para descobrir quem está a ocupar a porta:
+  `lsof -nP -iTCP:5000 -sTCP:LISTEN`.
+
+  ## Como obter o token
+
+  Selecione o ambiente **local** e rode `Auth / Login (admin)`. O script
+  pós-resposta grava o token em `{{token}}` e também em `{{adminToken}}`, e
+  todos os requests protegidos já usam `{{token}}` como Bearer.
+
+  O token é assinado com a `SECRET_KEY` e expira (`TOKEN_TTL_SECONDS`, 1h por
+  omissão). Quando os requests passarem a devolver 401, rode o login outra vez.
+
+  `Auth / Login (user)` e `Auth / Login (manager)` gravam `{{userToken}}` e
+  `{{managerToken}}` sem mexer no `{{token}}` — servem para testar o modelo de
+  acesso por papel sem perder a sessão de admin.
+
+  ## Modelo de acesso
+
+  | Acesso | Endpoints |
+  |---|---|
+  | Público | `GET /`, `GET /health`, `POST /login`, `POST /users` |
+  | Autenticado | tudo em `/tasks`, `GET /categories` |
+  | Próprio ou privilegiado | `GET`/`PUT /users/:id`, `GET /users/:id/tasks`, `GET /reports/user/:id` |
+  | `admin` ou `manager` | `GET /users`, `GET /reports/summary`, escrita em `/categories` |
+  | `admin` | `DELETE /users/:id`, alterar `role` |
+
+  Requests marcados com `(403)` no nome existem para provar que a guarda
+  recusa — são o caminho negativo, não um erro da coleção.
+}

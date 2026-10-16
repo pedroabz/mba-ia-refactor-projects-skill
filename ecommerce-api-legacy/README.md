@@ -45,20 +45,27 @@ escreve SQL.
 As rotas administrativas exigem um token Bearer com papel `admin`. Obtenha um em
 `POST /api/auth/login`. Em desenvolvimento, os seeds criam:
 
-| e-mail | papel | senha (de `.env.example`) |
+| e-mail | papel | senha |
 |---|---|---|
 | `leonan@fullcycle.com.br` | `student` | `SEED_STUDENT_PASSWORD` |
 | `admin@fullcycle.com.br` | `admin` | `SEED_ADMIN_PASSWORD` |
 
+**Essas variáveis não têm default.** Se não forem definidas, o seeder gera uma senha
+aleatória por processo e a registra no log do boot — procure a linha
+`seeded development fixtures with sign-in credentials`. Antes havia um default literal
+(`dev-admin-password`) em `config/index.js`, o que dava um administrador de senha conhecida
+em qualquer ambiente cujo `NODE_ENV` não fosse exatamente `production`.
+
 Senhas são armazenadas com `scrypt` (salt por usuário, custo configurável). Seeding é
-recusado em produção.
+recusado em produção, e vem ligado em todo o resto — use `SEED_ENABLED=false` em qualquer
+host compartilhado onde contas de fixture não devam existir.
 
 ## Endpoints
 
 | Método | Caminho | Acesso | Resposta |
 |---|---|---|---|
 | `POST` | `/api/auth/login` | público | `200 {token, expiresInSeconds, role}` |
-| `POST` | `/api/checkout` | público | `201 {enrollmentId, courseId, amount, status}` |
+| `POST` | `/api/checkout` | público | `402` sem gateway configurado; `201 {enrollmentId, courseId, amount, status}` quando há um |
 | `GET` | `/api/admin/financial-report` | `admin` | `200 [{course, revenue, students}]` |
 | `DELETE` | `/api/users/:id` | `admin` | `204` |
 
@@ -72,7 +79,8 @@ Sucesso devolve o recurso (ou uma coleção). Falha devolve sempre JSON na mesma
 
 `code` é o identificador estável para o cliente ramificar; `message` é para humanos e pode
 mudar. Status usados: `400` validação, `401` sem credencial, `403` papel insuficiente,
-`402` pagamento recusado pelo provedor, `404` recurso inexistente, `429` rate limit.
+`402` pagamento recusado — pelo provedor ou, no estado atual, por não haver provedor
+configurado —, `404` recurso inexistente, `429` rate limit.
 
 ### Checkout
 
@@ -107,14 +115,27 @@ registros órfãos.
 
 ## Limitações conhecidas
 
-- **O gateway de pagamento é um stub.** `PAYMENT_DRIVER=stub` aprova qualquer cartão que
-  comece com `4`, sem contatar provedor algum — é a regra original do código legado,
-  isolada atrás de uma interface em `services/payment.gateway.js`. Produção se recusa a
-  usá-la. Um adaptador real precisa validar o cartão, chamar o provedor e manter o PAN fora
-  da aplicação.
+- **Não há gateway de pagamento, então todo pagamento é recusado.** `PAYMENT_DRIVER=stub`
+  não contata provedor nenhum e por isso não autoriza nada: `POST /api/checkout` responde
+  `402 payment_declined`. A regra original — aprovar qualquer cartão começando com `4` —
+  foi **removida**: o número do cartão não é mais insumo da decisão, então não existe regra
+  a ser descoberta. Produção se recusa a subir com o stub.
+
+  Para desenvolver o fluxo que vem *depois* de um pagamento aprovado, use
+  `PAYMENT_STUB_APPROVE=true`, que só é honrado com `NODE_ENV=development` e registra um
+  aviso no boot. Um adaptador real precisa validar o cartão, chamar o provedor e manter o
+  PAN fora da aplicação.
 - **Rate limiting é em processo**, portanto por instância: com várias réplicas o limite
   efetivo é multiplicado pelo número de réplicas. Um store compartilhado (Redis) é a
   resposta para produção.
+
+  **Atrás de proxy, defina `TRUST_PROXY=true`.** O limitador usa `req.ip` como chave. Com
+  `TRUST_PROXY=false` (o default) `req.ip` é o endereço do peer do socket — correto quando o
+  processo está exposto direto, e o endereço do *proxy* quando não está. Nesse caso todos os
+  clientes caem no mesmo balde e as 5 tentativas por minuto do login viram um limite global:
+  um cliente tranca todos os outros. O default é `false` porque confiar no header sem nada a
+  montante sanitizá-lo deixa o chamador escolher o próprio endereço — ative apenas com um
+  proxy seu definindo `X-Forwarded-For`.
 - **Sem migrations.** O schema é criado no boot; evoluí-lo exige editar `infra/schema.js`.
 - **Sem testes automatizados** no projeto.
 - **A trilha de auditoria é somente-escrita**: `audit_logs` é gravada dentro da transação de

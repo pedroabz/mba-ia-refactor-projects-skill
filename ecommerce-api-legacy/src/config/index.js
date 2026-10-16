@@ -30,6 +30,21 @@ function secret(name, { purpose }) {
     return crypto.randomBytes(32).toString('hex');
 }
 
+/**
+ * A development-only secret: never required, and never a committed literal.
+ *
+ * `secret()` cannot be used for these because configuration is built before anything decides
+ * whether seeding will run, so a required-in-production secret would stop a production boot
+ * over a fixture that production refuses to create anyway. An absent value becomes a random
+ * one for this process, which the seeder logs so a developer can still sign in.
+ */
+function devSecret(name) {
+    const value = process.env[name];
+    if (value) return value;
+    if (isProduction) return null;
+    return crypto.randomBytes(18).toString('base64url');
+}
+
 /** A non-secret setting: a development-safe default is fine. */
 function str(name, fallback) {
     const value = process.env[name];
@@ -63,6 +78,13 @@ const config = Object.freeze({
         port: int('PORT', 3100),
         host: str('HOST', '127.0.0.1'),
         bodyLimit: str('HTTP_BODY_LIMIT', '100kb'),
+        // The rate limiter keys on `req.ip`, so this decides whether it works. Off means the
+        // socket's peer address, which is right when the process is exposed directly and
+        // wrong behind a load balancer: there every caller presents the proxy's address and
+        // shares one bucket, so one client's burst locks out everybody else. Default off
+        // because trusting the header when nothing upstream strips it lets a caller choose
+        // its own identity — set it only when a proxy you control sets X-Forwarded-For.
+        trustProxy: bool('TRUST_PROXY', false),
     }),
 
     database: Object.freeze({
@@ -81,10 +103,15 @@ const config = Object.freeze({
     }),
 
     payment: Object.freeze({
-        // 'stub' approves by card prefix without contacting anyone — it is the legacy rule,
-        // isolated behind a port so it can be replaced. Production refuses to use it.
+        // 'stub' contacts no provider, so it cannot authorize anything: it declines. See
+        // services/payment.gateway.js. Production refuses to use it at all.
         driver: str('PAYMENT_DRIVER', isProduction ? 'gateway' : 'stub'),
         gatewayKey: process.env.PAYMENT_GATEWAY_KEY || null,
+        // Lets the stub approve, for developing the post-payment flow without a provider.
+        // Named for what it does, off unless set, and honoured only in development — the
+        // previous behaviour was the reverse: approval was the default in every environment
+        // that was not literally 'production'.
+        stubApprove: NODE_ENV === 'development' && bool('PAYMENT_STUB_APPROVE', false),
     }),
 
     mail: Object.freeze({
@@ -94,8 +121,13 @@ const config = Object.freeze({
     seed: Object.freeze({
         // Fixture data for local development only; refused in production (see infra/schema.js).
         enabled: bool('SEED_ENABLED', !isProduction),
-        studentPassword: str('SEED_STUDENT_PASSWORD', 'dev-student-password'),
-        adminPassword: str('SEED_ADMIN_PASSWORD', 'dev-admin-password'),
+        // No literal defaults: these used to be 'dev-student-password' and
+        // 'dev-admin-password' in this file, so every environment whose NODE_ENV was not
+        // exactly 'production' — staging, qa, an unset value — came up with an administrator
+        // whose password was readable in the repository. Unset now means a random password
+        // per process, which the seeder logs.
+        studentPassword: devSecret('SEED_STUDENT_PASSWORD'),
+        adminPassword: devSecret('SEED_ADMIN_PASSWORD'),
     }),
 
     report: Object.freeze({

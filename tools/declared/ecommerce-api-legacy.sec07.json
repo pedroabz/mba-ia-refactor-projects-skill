@@ -1,0 +1,41 @@
+{
+  "project": "ecommerce-api-legacy",
+  "notes": [
+    "Contract changes made on purpose by the SEC-07 fix (audit-project-4.md), written down",
+    "before the replay so the comparison can separate them from regressions. Compare against",
+    "tools/baselines/ecommerce-api-legacy.pre-sec07.json, which was captured from the",
+    "post-first-refactor code and verified reproducible (13/13 on a second capture).",
+    "All four entries below are the same single change observed in four places: the stub",
+    "payment gateway no longer approves, so the two checkouts that used to succeed are now",
+    "declined and the two reports no longer count their revenue.",
+    "Replay with SEED_ADMIN_PASSWORD=dev-admin-password SEED_STUDENT_PASSWORD=dev-student-password,",
+    "since those passwords no longer have committed defaults (SEC-01) and the spec signs in",
+    "with the admin fixture."
+  ],
+  "changes": {
+    "checkout-new-user": {
+      "finding": "SEC-07",
+      "from": "201 enrollment created, payment recorded as PAID",
+      "to": "402 payment_declined",
+      "reason": "The stub approved any card beginning with 4 without contacting a provider, so this request bought a 497.00 course for free. The placeholder now declines, because a capability it cannot verify is one it must not grant. A request that used to forge an authorization being refused is the fix, not a regression."
+    },
+    "checkout-existing-user": {
+      "finding": "SEC-07",
+      "from": "201 enrollment created for the already-seeded user",
+      "to": "402 payment_declined",
+      "reason": "Same cause as checkout-new-user: the approval was never real. Whether the user already existed made no difference to the forged authorization."
+    },
+    "report-after-checkouts": {
+      "finding": "SEC-07",
+      "from": "Clean Architecture revenue 1994 with two Leonan enrollments; Docker revenue 497 with one student",
+      "to": "Clean Architecture revenue 997 with one enrollment; Docker revenue 0 with no students",
+      "reason": "The report is downstream of the two declined checkouts. The earlier figures counted money that was never charged, which is the Impact line of SEC-07 — the report was wrong in a way no reader could detect from the output. The remaining 997 is the seeded enrollment, which has a genuine payment row."
+    },
+    "report-after-delete": {
+      "finding": "SEC-07",
+      "from": "revenue 1994 across two anonymized enrollments; Docker 497",
+      "to": "revenue 997 for one anonymized enrollment; Docker 0",
+      "reason": "Same cause. Anonymization still works: the surviving enrollment shows as 'Conta removida' with its payment intact, which is the DAT-03 behaviour from the first refactor and is unchanged."
+    }
+  }
+}

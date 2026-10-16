@@ -104,7 +104,17 @@ async function seed(db, { config, authService, logger }) {
         );
     });
 
-    logger.info('seeded development fixtures', { users: 2, courses: 2, enrollments: 1 });
+    // The passwords are random unless SEED_* was set, so they have to be reported or the
+    // fixture accounts are unusable. Logged deliberately: these are throwaway local
+    // credentials, and the alternative — a known default in a committed file — is the
+    // finding this replaced.
+    logger.warn('seeded development fixtures with sign-in credentials', {
+        users: 2,
+        courses: 2,
+        enrollments: 1,
+        student: { email: 'leonan@fullcycle.com.br', password: config.seed.studentPassword },
+        admin: { email: 'admin@fullcycle.com.br', password: config.seed.adminPassword },
+    });
 }
 
 module.exports = { createSchema, seed };

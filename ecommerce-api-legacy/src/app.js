@@ -114,7 +114,10 @@ async function buildApp() {
     // ---- the chain, in order ---------------------------------------------------
     const app = express();
     app.disable('x-powered-by');
-    app.set('trust proxy', false);          // req.ip must not be spoofable by a header
+    // Decides what `req.ip` is, and therefore whether the rate limiter keys per caller or
+    // lumps everyone behind a proxy into one bucket. Configurable because the right answer
+    // depends on the deployment; defaults to off so a direct exposure cannot be spoofed.
+    app.set('trust proxy', config.http.trustProxy);
 
     app.use(securityHeaders);
     app.use(express.json({ limit: config.http.bodyLimit }));

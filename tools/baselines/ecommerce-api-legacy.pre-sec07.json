@@ -1,0 +1,246 @@
+{
+  "project": "ecommerce-api-legacy",
+  "base_url": "http://127.0.0.1:3199",
+  "authenticated": [
+    "default"
+  ],
+  "unordered": [
+    "report-seeded",
+    "report-after-checkouts",
+    "report-after-delete"
+  ],
+  "step_count": 13,
+  "observations": [
+    {
+      "id": "report-seeded",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 997,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 0,
+          "students": []
+        }
+      ]
+    },
+    {
+      "id": "checkout-missing-fields",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "name": "é obrigatório",
+            "email": "é obrigatório",
+            "password": "é obrigatório",
+            "courseId": "é obrigatório",
+            "cardNumber": "é obrigatório"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-missing-card",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "cardNumber": "é obrigatório"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-course-not-found",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "course_not_found",
+          "message": "Curso não encontrado"
+        }
+      }
+    },
+    {
+      "id": "checkout-declined",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "password": "deve ter no mínimo 8 caracteres"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkout-new-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "enrollmentId": 2,
+        "courseId": 2,
+        "amount": 497,
+        "status": "PAID"
+      }
+    },
+    {
+      "id": "checkout-existing-user",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 201,
+      "content_type": "application/json",
+      "body": {
+        "enrollmentId": 3,
+        "courseId": 1,
+        "amount": 997,
+        "status": "PAID"
+      }
+    },
+    {
+      "id": "checkout-no-password",
+      "method": "POST",
+      "path": "/api/checkout",
+      "status": 400,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "validation_error",
+          "message": "Requisição inválida",
+          "details": {
+            "password": "é obrigatório"
+          }
+        }
+      }
+    },
+    {
+      "id": "report-after-checkouts",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 1994,
+          "students": [
+            {
+              "student": "Leonan",
+              "paid": 997
+            },
+            {
+              "student": "Leonan",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 497,
+          "students": [
+            {
+              "student": "Guilherme",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delete-user-existing",
+      "method": "DELETE",
+      "path": "/api/users/1",
+      "status": 204,
+      "content_type": "text/plain",
+      "body": ""
+    },
+    {
+      "id": "report-after-delete",
+      "method": "GET",
+      "path": "/api/admin/financial-report",
+      "status": 200,
+      "content_type": "application/json",
+      "body": [
+        {
+          "course": "Clean Architecture",
+          "revenue": 1994,
+          "students": [
+            {
+              "student": "Conta removida",
+              "paid": 997
+            },
+            {
+              "student": "Conta removida",
+              "paid": 997
+            }
+          ]
+        },
+        {
+          "course": "Docker",
+          "revenue": 497,
+          "students": [
+            {
+              "student": "Guilherme",
+              "paid": 497
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delete-user-missing",
+      "method": "DELETE",
+      "path": "/api/users/9999",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "user_not_found",
+          "message": "Usuário não encontrado"
+        }
+      }
+    },
+    {
+      "id": "unmatched-route",
+      "method": "GET",
+      "path": "/api/nope",
+      "status": 404,
+      "content_type": "application/json",
+      "body": {
+        "error": {
+          "code": "route_not_found",
+          "message": "Rota não encontrada: GET /api/nope"
+        }
+      }
+    }
+  ]
+}

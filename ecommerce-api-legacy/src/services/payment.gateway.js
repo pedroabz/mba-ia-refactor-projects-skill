@@ -1,46 +1,65 @@
 /**
- * The payment port, and the stub that currently stands behind it.
+ * The payment port, and the placeholder that stands behind it until a provider is integrated.
  *
  * The approval rule used to be one expression inside the checkout route handler:
  *
  *     let status = cc.startsWith("4") ? "PAID" : "DENIED";
  *
- * That is not an authorization. It contacts nobody, checks no funds, validates no card and
- * captures nothing — any number beginning with 4 was an approved purchase and a free
- * enrollment. **The rule itself is unchanged here, deliberately**: there is no gateway to
- * integrate with in this project, and silently inventing one would hide the gap. What
- * changed is that it now has a name, a single owner, an interface, and a refusal to run in
- * production — so replacing it is one adapter, not an edit inside a request handler.
+ * Extracting it into this module gave it an owner and an interface, which fixed where the
+ * rule lived. It did not fix the rule: any number beginning with 4 was still an approved
+ * purchase and a free enrollment, and `PAYMENT_DRIVER` selected this path by default in every
+ * environment that was not literally 'production'. A forged authorization behind a clean
+ * interface is still a forged authorization.
  *
- * A real adapter must implement `authorize` and do what the stub cannot: validate the card,
- * call the provider with the configured key, and return the provider's decision plus its
- * reference. Note that it must also stop the card number from reaching the application at
- * all; the stub only tolerates it because it never leaves this module.
+ * So the placeholder no longer decides. It cannot contact a provider, validate a card or
+ * capture funds, and the only answer it can honestly give is a decline — which is also the
+ * safe one, because the capability it cannot verify is the capability it must not grant. The
+ * card number is no longer an input to the decision, so there is no rule left to discover.
+ *
+ * `PAYMENT_STUB_APPROVE=true` exists for developing the flow that follows a successful
+ * payment. It is named for what it does, it is off unless set, and `config` honours it only
+ * when NODE_ENV is 'development'.
+ *
+ * A real adapter implements `authorize({ cardNumber, amount, reference })` and returns the
+ * provider's decision plus its reference. It must also keep the card number out of the
+ * application: the only reason the PAN reaches this layer today is that nothing here uses it.
  */
-const APPROVED_CARD_PREFIX = '4';
+const DECLINE_NO_GATEWAY = 'no_payment_gateway_configured';
 
-/** Last four digits: the most that may be logged or stored about a card. */
-function maskCard(cardNumber) {
-    return `****${String(cardNumber).slice(-4)}`;
-}
+function createStubPaymentGateway({ logger, approveForDevelopment }) {
+    if (approveForDevelopment) {
+        logger.warn(
+            'PAYMENT_STUB_APPROVE is on: the stub will approve every charge without ' +
+            'contacting a provider. Development only.',
+        );
+    }
 
-function createStubPaymentGateway({ logger }) {
     return {
         name: 'stub',
+        approves: Boolean(approveForDevelopment),
 
-        async authorize({ cardNumber, amount, reference }) {
-            const approved = String(cardNumber).startsWith(APPROVED_CARD_PREFIX);
-            logger.warn('payment authorized by stub gateway — no provider was contacted', {
-                approved,
+        /**
+         * `cardNumber` is accepted so the port matches what a real adapter needs, and is
+         * deliberately unused: nothing here is capable of judging it.
+         */
+        async authorize({ amount, reference }) {
+            if (!approveForDevelopment) {
+                logger.warn('payment declined: no gateway adapter is configured', {
+                    amount,
+                    reference,
+                });
+                return {
+                    approved: false,
+                    reference: null,
+                    declineReason: DECLINE_NO_GATEWAY,
+                };
+            }
+
+            logger.warn('payment APPROVED BY STUB — no provider was contacted', {
                 amount,
                 reference,
-                card: maskCard(cardNumber),
             });
-            return {
-                approved,
-                reference: null,
-                declineReason: approved ? null : 'stub_rule_card_prefix',
-            };
+            return { approved: true, reference: null, declineReason: null };
         },
     };
 }
@@ -49,18 +68,38 @@ function createPaymentGateway({ config, logger }) {
     if (config.payment.driver === 'stub') {
         if (config.isProduction) {
             throw new Error(
-                'PAYMENT_DRIVER=stub refuses to run in production: it approves cards without ' +
-                'contacting a provider. Configure a real gateway adapter.',
+                'PAYMENT_DRIVER=stub refuses to run in production: it cannot authorize a ' +
+                'payment. Configure a real gateway adapter.',
             );
         }
-        logger.warn('using the stub payment gateway', { env: config.env });
-        return createStubPaymentGateway({ logger });
+
+        // A key set against the stub means someone believes a provider is wired up. Nothing
+        // here would use it, so say so rather than letting the assumption stand.
+        if (config.payment.gatewayKey) {
+            logger.warn(
+                'PAYMENT_GATEWAY_KEY is set but PAYMENT_DRIVER=stub, which contacts no ' +
+                'provider and ignores the key. No payment will be authorized against it.',
+            );
+        }
+
+        logger.warn('using the stub payment gateway: every charge is declined', {
+            env: config.env,
+            approvesForDevelopment: config.payment.stubApprove,
+        });
+        return createStubPaymentGateway({
+            logger,
+            approveForDevelopment: config.payment.stubApprove,
+        });
     }
 
     throw new Error(
-        `PAYMENT_DRIVER="${config.payment.driver}" has no adapter. Implement one that calls the ` +
-        'provider and register it here; the stub is development-only.',
+        `PAYMENT_DRIVER="${config.payment.driver}" has no adapter. Implement one that calls ` +
+        'the provider and register it here; the stub is development-only.',
     );
 }
 
-module.exports = { createPaymentGateway, createStubPaymentGateway, maskCard, APPROVED_CARD_PREFIX };
+module.exports = {
+    createPaymentGateway,
+    createStubPaymentGateway,
+    DECLINE_NO_GATEWAY,
+};

@@ -60,6 +60,21 @@ Fase 2: Formulação de um plano para chegar a versão final da skill.
 - Como adicionar os arquivos de referência e quais estratégias usar para que não fiquem grandes demais e sejam ignoradas pelos agented de IA? -> Nesse caso a estratégia foi dividir certos pontos que precisam de mais detalhamento em arquivos de referência + deep analysis (feito para anti patterns e refactoring playbook). O agente identifica o problema e então toma a ação carregando só o necessário. -> Nenhum arquivo de referência deveria ter mais de 200 linhas.
 - Refatorar a skill para um linguagem mais clara, sem ambiguidade e já referenciando os reference files. Foi usado a IA para pontuar quais são as falhas da skill frente as instruções para que as mudanças pudessem ser feitas com clareza e intencionalidade.
 
+Fase 3: Correção a partir do que apareceu na primeira execução.
+
+- **A skill classificava só o problema principal de cada trecho de código, e não todos.** Quando um mesmo pedaço de código tinha mais de um defeito independente, ela escrevia um único achado — o que lhe parecia mais relevante — e os outros não entravam no relatório. Um código mal escrito que também tivesse um bug acabava com um achado só: ou a legibilidade, ou o bug. Na Fase 3 a correção fechava o achado que estava escrito, e o outro defeito seguia no código sem nunca ter sido registrado.
+
+  O caso que escancarou isso foi o `ecommerce-api-legacy`: a aprovação de pagamento decidida pelo primeiro dígito do cartão foi reportada como *regra de negócio na camada errada* (`LAY-02`, HIGH). A Fase 3 moveu a regra para um service com interface própria, o que resolveu esse achado por completo. Mas a regra em si — aprovar qualquer cartão começando com 4, sem consultar provedor nenhum — continuou valendo, porque nunca foi escrita como achado. O relatório descrevia a falha de segurança dentro do campo de impacto e não tinha onde registrá-la.
+
+  O que mudou na skill:
+
+  - **Regra "um defeito, um achado"** (`anti-patterns.md`), com um teste de uma linha para decidir: *corrigir um resolveria o outro?* Se não, são dois achados — dois ids, duas severidades, duas recomendações, mesmo apontando para a mesma linha. Vale nas duas direções: não subir legibilidade para CRITICAL porque há um bug ao lado, nem deixar um achado de estrutura engolir um de segurança porque dividem endereço.
+  - **O vício estava escrito na própria skill em outros dois pontos**, que mandavam explicitamente juntar dois problemas em um: `SELECT *` com vazamento de senha, e rota sem autenticação que executa SQL arbitrário. Os dois passaram a mandar separar.
+  - **Item novo no catálogo** (`SEC-07`): decisão de segurança simulada que libera por padrão — era o id que faltava para o defeito do pagamento ter onde ser registrado.
+  - **Conserto correspondente** (`T-25`): quando não há como verificar se deve liberar, o padrão vira recusar. Não é apagar o placeholder, o que derrubaria o endpoint; é tirar dele a capacidade de conceder.
+  - **Não é mais permitido adiar achado CRITICAL ou HIGH.** A seção de "deferred" existia para problemas menores e tinha virado saída para problema grave.
+  - **O relatório da Fase 3 agora presta contas por achado**, com o status de cada um. Antes somava transformações aplicadas, e uma correção pela metade desaparecia nessa conta.
+
 ## Resultados
 
 ### Projeto code-smells-project

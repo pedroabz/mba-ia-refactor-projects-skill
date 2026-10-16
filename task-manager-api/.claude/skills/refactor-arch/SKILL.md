@@ -82,6 +82,13 @@ The catalog is a set of examples, not a closed list. When you find a real proble
 entry anticipates, report it following "When nothing matches" in `anti-patterns.md` rather
 than forcing it onto an entry that does not fit.
 
+One place in the code often holds several independent defects — a handler can be both
+unreadable and wrong, a rule can be both in the wrong layer and incorrect. Each gets its own
+finding, its own severity and its own recommendation, even when they share a line number. The
+test is in "One defect, one finding" in `anti-patterns.md`: if fixing one would not fix the
+other, they are two. Merging them is the costliest mistake available here, because the fix
+closes the half the finding was named after and the other half stops being tracked at all.
+
 Write the report to the path derived in `references/report-template.md` ("Report file"), so
 the skill stays correct when copied into another project. The report has to carry the project
 identification from Phase 1 as well as all of the Phase 2 analysis.
@@ -113,6 +120,19 @@ Match the work to the starting point using "Adapting to the starting point" in
 layered codebase needs different transformations than a monolith — keep the layers that
 already work.
 
+Apply each finding's recommendation in full, and close every CRITICAL and HIGH one in this
+phase — read "What counts as closed" in `refactoring-playbook.md` before deciding that any of
+them is done. A finding is closed when the consequence named in its own Impact line can no
+longer happen.
+
+Each transformation closes its own finding and no other, so a location with two findings
+needs both applied before it is done.
+
+Where the real fix needs something the refactor cannot reach — a payment provider,
+credentials, a sandbox — close it by failing closed, denying the capability instead of
+granting it. The only recommendation you may leave unapplied is one that is genuinely the
+operator's decision, and that gets reported as *recommended, not applied* with the reason.
+
 Before modifying any file, capture the endpoint contract as described in
 `refactoring-playbook.md` ("Capture the contract before changing anything"). Apply the
 transformations in the order given there, booting the app between groups. After the last
@@ -121,7 +141,9 @@ in the same file rather than continuing — a deferred transformation with a sta
 better outcome than a broken application.
 
 At the end of the phase you will print the new project structure and a validation summary
-reporting what you actually verified, plus anything you deliberately left undone.
+reporting what you actually verified, plus anything you deliberately left undone. Account for
+every finding by id and state its status, so that a fix which only landed structurally is
+visible instead of being absorbed into a count of transformations.
 
 It has to print something following the format below:
 ================================
@@ -144,11 +166,13 @@ src/
 ## Transformations Applied
 <T-id — what changed, file(s) touched>
 
+## Findings
+<ID> <SEVERITY> — closed | recommended, not applied | deferred — <how the Impact can no
+longer happen, or who has to decide>
+
 ## Validation
   <✓|✗> Application boots without errors
   <✓|✗> Endpoints replayed: <n>/<n> match the baseline
+  <✓|✗> Every CRITICAL and HIGH finding closed: <n>/<n>
   <any intentional contract change, with its reason>
-
-## Deferred
-<findings not fixed, and why>
 ================================

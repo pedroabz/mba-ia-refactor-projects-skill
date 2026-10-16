@@ -139,9 +139,12 @@ same problem one layer up.
 column added or renamed later changes responses that never asked for it. The second reason is
 the one that survives the "it is a small table" objection.
 
-**This overlaps SEC-02 when the extra columns are sensitive.** If `SELECT *` is what pulls a
-password column into a response, the finding is SEC-02 at CRITICAL, with the over-fetching as
-the mechanism — not two separate findings at LOW and CRITICAL.
+**When the extra columns are sensitive, there are two findings, not one.** The over-fetching
+is this entry at LOW; the credential reaching the response is SEC-02 at CRITICAL. They are
+independent: removing the field from the serializer stops the leak and leaves `SELECT *`
+intact, and selecting explicit columns fixes the over-fetch while a second serializer could
+leak the field again tomorrow. Report both, each at its own severity, and mention in each
+that the other exists.
 
 **Not this:** a full-entity load where most fields are genuinely used. An ORM fetching an
 entity it will persist back.

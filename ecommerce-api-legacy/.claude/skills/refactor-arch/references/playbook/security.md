@@ -1,7 +1,7 @@
 # Playbook — security transformations
 
-T-01 to T-05. Examples are illustrative shapes, not templates to paste: match the project's
-language, style and framework idioms.
+T-01 to T-05 and T-25. Examples are illustrative shapes, not templates to paste: match the
+project's language, style and framework idioms.
 
 ---
 
@@ -254,3 +254,100 @@ Express equivalent: `router.post('/admin/reset', requireRole('admin'), controlle
    enough for per-resource access.
 5. Report the intentional contract change: guarded endpoints now return 401/403 where they
    previously returned 200.
+
+---
+
+## T-25 — Make a simulated decision fail closed
+
+Fixes SEC-07. Apply whenever a security-critical decision cannot be implemented for real
+during the refactor — which is the normal case, since there is no provider to integrate with
+and no credentials to use.
+
+**The transformation is not "write the real integration".** You usually cannot: that needs an
+account, keys, a sandbox and a contract test. It is also not "delete the placeholder", which
+would stop the endpoint from answering at all. It is **invert the default**: the placeholder
+stays, loses the ability to grant, and the real decision becomes a named adapter that does not
+exist yet.
+
+**Before** — extracted behind a clean interface, and still approving:
+
+```javascript
+function createStubPaymentGateway({ logger }) {
+    return {
+        name: 'stub',
+        async authorize({ cardNumber, amount }) {
+            const approved = String(cardNumber).startsWith('4');   // the bypass, relocated
+            logger.warn('no provider was contacted', { approved });
+            return { approved, reference: null };
+        },
+    };
+}
+
+// config: driver defaults to 'stub' outside production, so the permissive path is the default
+driver: str('PAYMENT_DRIVER', isProduction ? 'gateway' : 'stub'),
+```
+
+The production guard that usually accompanies this is worth keeping and is not the fix: it
+protects one environment while the default stays permissive in all the others.
+
+**After** — the placeholder declines, and approving requires a deliberate, loudly named
+opt-in that production refuses:
+
+```javascript
+/**
+ * Stand-in for the payment provider. It cannot authorize: nothing here contacts a provider,
+ * validates a card or captures funds, so the only honest answer is a decline.
+ *
+ * `PAYMENT_STUB_APPROVE=true` exists for local development of the post-payment flow. It is
+ * named for what it does, it is off unless set, and the configuration refuses it outside
+ * development — a forgotten variable can no longer approve a purchase.
+ */
+function createStubPaymentGateway({ logger, approveForLocalDevelopment }) {
+    return {
+        name: 'stub',
+
+        async authorize({ amount, reference }) {
+            if (!approveForLocalDevelopment) {
+                logger.warn('payment declined: no gateway adapter is configured', {
+                    amount, reference,
+                });
+                return {
+                    approved: false,
+                    reference: null,
+                    declineReason: 'no_payment_gateway_configured',
+                };
+            }
+            logger.warn('payment APPROVED BY STUB — development opt-in, no provider contacted', {
+                amount, reference,
+            });
+            return { approved: true, reference: null, declineReason: null };
+        },
+    };
+}
+```
+
+The card number stops being a parameter of the decision, which also removes the last reason
+for the PAN to reach this layer.
+
+**Steps**
+
+1. **Invert the default to deny.** The placeholder returns "not authorized" with a reason
+   naming the real cause — the adapter is missing, not the card.
+2. **Stop deciding from the inspected value.** Remove the prefix, length or list test
+   entirely, so there is no rule left to discover and exploit. A decline needs no input.
+3. **Gate any permissive path behind a variable named for what it does** (`STUB_APPROVE`,
+   `AUTH_ALLOW_ANY`), defaulted off, and reject it in configuration outside development.
+   `DEBUG` or `NODE_ENV` are not that variable: they are set for unrelated reasons.
+4. **Keep the production refusal** from the existing guard. It is a second layer, not the fix.
+5. **Make the caller handle the decline properly** — the use case must not record a captured
+   payment, grant access or send a confirmation on a declined authorization. Check the
+   persistence path: a decline must leave no enrollment, order or entitlement behind, inside
+   the same transaction as the rest (T-10).
+6. **Declare the contract change.** The success path now returns a decline status (402, or the
+   project's equivalent) where it previously returned success. This *is* the fix: a request
+   that used to buy something for free is now refused. Record it as an intentional change with
+   that reasoning, and say in the report what a real adapter must implement.
+
+**Verify by** calling the endpoint with the input that used to be approved and confirming it
+is declined, then confirming no row was written. "It still returns 201" means the
+transformation did not land.

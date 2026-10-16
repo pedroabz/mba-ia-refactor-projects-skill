@@ -42,6 +42,64 @@ apply unchanged, and they matter more for an improvised fix than for a rehearsed
 | T-22 | Rename for intent | QUA-04 | `playbook/code-quality.md` |
 | T-23 | Replace ad-hoc printing with logging | QUA-05 | `playbook/code-quality.md` |
 | T-24 | Modernize a deprecated API | DEP-01 | `playbook/code-quality.md` |
+| T-25 | Make a simulated decision fail closed | SEC-07 | `playbook/security.md` |
+
+## What counts as closed
+
+A finding is closed when the consequence named in its own **Impact** line can no longer
+happen. Not when a transformation ran, not when the code moved, not when the structure
+improved — when the stated harm is gone. This is the single most important check in the
+phase, because a finding can be processed and still be live.
+
+**Every CRITICAL and HIGH finding must be closed in this phase.** For those two severities,
+"applied the structural part" is not a result and the Deferred section is not available: a
+report that classifies something as a forged authorization or an injection point, and then
+ships it, has described the vulnerability rather than fixed it — and documented it well
+enough for someone else to use. Deferral belongs to MEDIUM and LOW, and to decisions that are
+genuinely the operator's (see "Changes that are the operator's call" below).
+
+Three traps produce a finding that looks closed and is not:
+
+- **A fix closes its own finding and no other.** Each transformation does one job, completely.
+  Moving a rule to its proper layer fixes the layering finding — fully, that work is done. It
+  does not touch whether the rule is correct, because changing behaviour is not what it does.
+  So the defect that remains is a *different* finding, and it is still open.
+
+  Where this goes wrong is one step earlier, in the audit: if the two defects were written up
+  as a single finding, closing one retires both on paper. Before you start a location, check
+  that every independent defect there has its own id. If the audit merged them, split it now
+  and carry both forward — "One defect, one finding" in `anti-patterns.md` has the test.
+- **A guard on one environment is not a fix.** Refusing to run in production, or behind a
+  flag that is off in CI, leaves the defect reachable everywhere else — including every
+  developer machine and usually staging. Read the configuration **defaults**: a driver, mode
+  or adapter selected whenever a variable is unset is on by default, and a default is what
+  ships.
+- **Documenting a defect is not fixing it.** A thorough comment explaining why something is
+  dangerous is valuable and changes no behaviour. A `## Known limitations` entry in the
+  README is the right place for a real residual gap, and the wrong place for a CRITICAL or
+  HIGH finding.
+
+When the real fix is genuinely outside reach — no provider to integrate with, no credentials,
+no sandbox — the finding is still closed, by **failing closed**: the capability that cannot
+be verified is denied rather than granted. A placeholder that refuses is an honest gap; a
+placeholder that grants is the original vulnerability with better formatting. T-25 is the
+general shape of that move.
+
+### Changes that are the operator's call
+
+Some recommendations should *not* be applied unilaterally, and the distinction is about who
+bears the consequence rather than about difficulty:
+
+- Raising a validation threshold that would reject credentials or data the system currently
+  accepts.
+- Renaming a public request or response field, which breaks existing clients.
+- Removing an endpoint that something outside the repository may depend on.
+
+Report these as *recommended, not applied*, with the reason and the exact change proposed.
+That is a decision deferred to a human, which is legitimate at any severity. It is not the
+same as leaving a vulnerability in place because fixing it was hard — and the test that
+separates them is simple: if applying the fix only ever removes a capability that should not
+have existed, nobody needs to approve it.
 
 ## Capture the contract before changing anything
 
@@ -138,21 +196,35 @@ PHASE 3: REFACTORING COMPLETE
 ## Transformations Applied
 <T-id — what changed, file(s) touched>
 
+## Findings
+<one line per finding from the audit:>
+<  <ID> <SEVERITY> — closed | recommended, not applied | deferred — <how the Impact can no
+   longer happen, or who has to decide>
+
 ## Validation
   <✓|✗> Application boots without errors
   <✓|✗> Endpoints replayed: <n>/<n> match the baseline
+  <✓|✗> Every CRITICAL and HIGH finding closed: <n>/<n>
   <list any intentional contract change, with its reason>
-
-## Deferred
-<findings not fixed, and why>
 ================================
 ```
 
-Two rules about this output. Report what was actually verified — a checkmark next to
-"endpoints respond correctly" that nobody replayed is worse than no checkmark, because it
-converts an unknown into a false claim. And never print a fixed string like "zero
-anti-patterns remaining": state which findings were fixed and list the rest under Deferred.
-A deferred finding with a reason is a legitimate outcome; a silently dropped one is not.
+Three rules about this output.
+
+Report what was actually verified — a checkmark next to "endpoints respond correctly" that
+nobody replayed is worse than no checkmark, because it converts an unknown into a false
+claim. And never print a fixed string like "zero anti-patterns remaining".
+
+**Account for every finding by id, including the closed ones.** The per-finding list is what
+makes a partial fix visible: a finding whose structural half was applied and whose behaviour
+is unchanged has to appear as something other than closed, and writing that line is usually
+the moment the gap becomes obvious. A summary that reports only totals and transformations
+hides exactly this case.
+
+**A CRITICAL or HIGH that is not closed fails the phase.** Say so plainly at the top of the
+summary rather than leaving it to be inferred from a list — and go back and close it. The
+only exception is a change that is genuinely the operator's call, which is reported as
+*recommended, not applied* with the decision stated.
 
 ## When validation fails
 
@@ -165,4 +237,6 @@ A failed boot or a diverging endpoint is information, not a dead end:
 4. Re-run the baseline before continuing.
 
 Reporting a deferred transformation with the reason is a better outcome than a broken
-application with a full checklist.
+application with a full checklist. That trade applies to MEDIUM and LOW work: if a CRITICAL
+or HIGH fix will not go in cleanly, the answer is a different approach to the same finding —
+narrower, or failing closed — not a note explaining why the vulnerability is still there.

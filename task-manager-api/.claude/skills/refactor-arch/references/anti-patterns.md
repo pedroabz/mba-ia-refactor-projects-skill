@@ -68,6 +68,40 @@ If a particular novel finding turns out to recur across projects, it belongs in 
 a proper entry — one row here and a section in the relevant `deep/` file. That is how the
 catalogue is meant to grow.
 
+## One defect, one finding
+
+The most expensive mistake in an audit is not missing a problem — it is reporting two
+problems as one. The merged finding gets a single severity, a single recommendation and a
+single line in the summary, so when the fix closes the half the finding was named after, the
+other half disappears from the accounting. Nobody dropped it; it was never being tracked.
+
+One piece of code often holds several independent defects. A long, tangled function can be
+*both* unreadable *and* wrong. A route that runs arbitrary SQL is *both* unauthenticated
+*and* arbitrary-execution-by-design. A query that selects every column *both* over-fetches
+*and* leaks a password into the response.
+
+**The test for whether it is one finding or two: would fixing one of them fix the other?**
+
+- *No* → two findings. Two ids, two severities, two recommendations, even when they point at
+  the same line. Say in each that the other exists, so a reader sees both, and never let one
+  absorb the other.
+- *Yes* → one finding, with one consequence as the mechanism and the other as the effect.
+
+Two common pairs, with the right outcome for each:
+
+| Code | Defects | Verdict |
+|---|---|---|
+| Deeply nested handler with a broken completion counter | unreadable (LOW/MEDIUM) · request hangs (HIGH) | **Two.** Making it readable does not fix the hang; fixing the hang does not make it readable |
+| Rule deciding payment from a card prefix, inline in a route | rule in the wrong layer (HIGH) · the rule is a forged approval (CRITICAL) | **Two.** Moving it to a service fixes the layer completely and leaves the forgery running |
+
+Severity follows each defect on its own. Resist both directions of collapsing: do not raise a
+readability finding to CRITICAL because a bug lives nearby, and do not let a structural
+finding swallow a security one because they share an address.
+
+**This is not about reporting the same defect twice.** One defect appearing at twenty call
+sites is one finding listing twenty locations — see the reporting rules in
+`report-template.md`. The distinction is defects, not lines.
+
 ## Severity scale
 
 This is the canonical scale for the whole skill. `report-template.md` formats it; this file
@@ -106,6 +140,7 @@ reviewer who finds one inflated severity discounts the rest.
 | SEC-04 | Broken or absent password storage | CRITICAL | OWASP A02 | Password persisted as received; MD5/SHA-1/SHA-256 used directly on a password; hand-rolled hashing; no per-user salt; comparison with `==` |
 | SEC-05 | Missing access control on sensitive or destructive operation | CRITICAL | OWASP A01 — deny by default | A route that deletes, resets, mass-reads personal data or executes arbitrary input with no auth check in the handler and no guard middleware; a route named `admin` with no role check; a token that is never verified anywhere |
 | SEC-06 | Insecure runtime configuration | HIGH | OWASP A05 | Debug mode enabled in the shipped entry point; permissive CORS applied globally; bind to all interfaces combined with debug; stack traces returned to clients |
+| SEC-07 | Security-critical decision simulated, and defaulting to permit | CRITICAL | Fail closed; deny by default | A payment approval, authentication, entitlement, quota, signature or fraud check decided by local inspection instead of by the authority that owns it: a card prefix or length, a hardcoded user list, a `TODO`, a flag named `fake`/`mock`/`stub`/`dev`, a function that returns `true` unconditionally. The finding is the **permissive default**, not the stub's existence |
 
 ### Layering — `deep/layering.md`
 

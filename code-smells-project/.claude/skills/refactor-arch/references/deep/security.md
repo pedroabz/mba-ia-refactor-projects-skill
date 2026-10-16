@@ -131,9 +131,12 @@ a finding; so is a non-admin route that happens to expose everything. Conversely
 that is issued but never verified anywhere means every route is unprotected — report that as
 one systemic finding rather than per route.
 
-**An endpoint that executes caller-supplied SQL or code** belongs here as well as in SEC-03,
-and should be reported as the stronger of the two: it is not a sanitization gap, it is
-arbitrary execution by design. The recommendation is removal, not escaping.
+**An endpoint that executes caller-supplied SQL or code** has two independent defects and
+gets two findings. One is the missing access control (this entry): anyone can call it. The
+other is that it executes whatever it is given (SEC-03): arbitrary execution by design, whose
+recommendation is removal rather than escaping. Adding authentication leaves a logged-in user
+with arbitrary execution; removing the endpoint closes both, but they are still two findings,
+because an audit that reports only one of them hides half the exposure.
 
 **Raise** when the operation is destructive, irreversible, or exposes data belonging to
 other users.
@@ -164,3 +167,60 @@ tidiness issue. Say which it is rather than reporting "debug enabled" flatly.
 policy on a genuinely public read-only API, if that is a deliberate documented choice.
 
 **Fix** → T-01 for the configuration itself; T-16 for the middleware that should constrain it.
+
+---
+
+## SEC-07 — Security-critical decision simulated, and defaulting to permit · CRITICAL
+
+Violates: fail closed; deny by default.
+
+**Confirm by** finding a decision that grants something of value — money captured, access
+granted, identity accepted, quota allowed, signature trusted — and checking **who actually
+decides**. The finding is a decision made by local inspection when the authority that owns it
+is never consulted.
+
+Shapes this takes:
+
+- A payment approved by looking at the card number (prefix, length, a checksum) with no
+  provider call, no funds check and no capture.
+- Authentication that accepts a hardcoded list, any non-empty credential, or a token it never
+  verifies.
+- An entitlement, plan or quota check that returns `true` unconditionally.
+- A signature or webhook verification that parses the payload and skips the signature.
+- A function named `fake`, `mock`, `stub`, `dummy`, `dev` or `test` wired into the live path.
+- A `TODO`/`FIXME` sitting where the real check belongs.
+
+**The finding is the permissive default, not the stub.** A project with no provider to call
+legitimately needs a placeholder; what makes it CRITICAL is that the placeholder *grants*.
+Establish three things and report them explicitly, because they are what the fix has to
+change:
+
+1. **Which way does it fail?** A stub that denies is a known gap. A stub that approves is a
+   bypass — anyone who learns the rule gets the thing for free.
+2. **Is it reachable by default?** Read the configuration defaults, not just the code. A
+   driver that defaults to the stub whenever an environment variable is unset is on in every
+   deployment that forgot to set it, which includes every developer machine and usually
+   staging.
+3. **What does a production guard actually cover?** Refusing to boot when
+   `NODE_ENV=production` is worth having and is not sufficient: it protects one environment
+   and leaves the default permissive everywhere else. Say so rather than counting it as the
+   fix.
+
+**Severity does not drop because it is "only a stub".** Judge by what the permissive path
+grants. Free goods, free access, accepted identity or bypassed billing is CRITICAL. Where the
+decision grants something minor and non-transferable, HIGH is defensible — state the
+reasoning.
+
+**Almost always this sits on top of a layering finding, and the two are separate.** The same
+expression is usually both business logic in the wrong layer (LAY-02) and a forged decision
+(this entry). Report both, at their own severities. Extracting the rule into a service closes
+LAY-02 completely — that work is finished and correct — and leaves the forged decision exactly
+as it was, because relocating code is not supposed to change behaviour. If only LAY-02 gets
+written up, the extraction retires the whole location on paper and the bypass survives the
+refactor. "One defect, one finding" in `anti-patterns.md` has the test for splitting them.
+
+**Not this:** a test double in a test suite. A feature flag that gates a non-security
+behaviour. A deliberately open endpoint that grants nothing. A stub that already fails closed
+and is documented — that is a known gap, worth a line under Notes, not a CRITICAL finding.
+
+**Fix** → T-25.
